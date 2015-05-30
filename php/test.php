@@ -23,7 +23,7 @@ $now = microtime(true);
 
 echo $now - $before."</BR>";
 
-echo DATA_CHAT_DIR;
+echo DATA_DIR;
 
 // $count = 100000;
 
