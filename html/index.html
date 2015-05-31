@@ -3,9 +3,35 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Title</title>
+		
+		<script type="text/javascript" src="../resource/js/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../resource/js/duckchat.js"></script>
+		
+		<script type="text/javascript">
+		 	var duckchat = new DuckChat();
+		 	setInterval(function(){duckchat.shortpolling();}, duckchat.pollingtime);
+		</script>
 	</head>
 	<body>
-		This is hello world
+		<form action="http://localhost/cs546/php/function/chat/ChatFileOperater.php?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=14330345948792" method="post">
+			sender: <input type="text" name="sender"/> <br/>
+			receiver: <input type="text" name="receiver"/> <br/>
+			<hr/>
+			<textarea rows="10" cols="10" name="msg"></textarea>
+			
+			<button type="submit">submit</button>
+		</form>
+		
+		<form action="http://localhost/cs546/php/function/chat/PollingChat.php?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=14330345948792" method="post">
+			I: <input type="text" name="connecter"/> <br/>
+			<hr/>
+			<textarea rows="10" cols="10" name="msg"></textarea>
+			<button type="submit">submit</button>
+		</form>
+		<hr/>
+		<div id="content">
+			Nothing here!!!!!
+		</div>
 		
 	</body>
 </html>

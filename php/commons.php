@@ -7,5 +7,6 @@ require_once 'utils/LogHelper.php';
 require_once 'utils/SqlHelper.php';
 require_once 'utils/StringHelper.php';
 require_once 'utils/FileHelper.php';
+require_once 'utils/PhpUtils.php';
 
 ?>
