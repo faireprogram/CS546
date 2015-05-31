@@ -4,6 +4,7 @@ define("DATA_DIR", dirname(__FILE__)."\data");
 //CHAT BASE
 define("DATA_CHAT_DIR", dirname(__FILE__)."\data\chat");
 define("DATA_CHAT_DIR_MAILBOX", dirname(__FILE__)."\data\chat\mailbox");
+define("DATA_CHAT_DIR_UNREADMAILS", dirname(__FILE__)."\data\chat\unreadmails");
 define("DATA_CHAT_DIR_HISTORY", dirname(__FILE__)."\data\chat\history");
 
 define("WAITING_TIME", 30);

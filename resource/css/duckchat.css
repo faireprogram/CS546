@@ -1,0 +1,37 @@
+/* layout */
+
+.container_wrapper {
+	height: 100%;
+}
+
+.desktop {
+	background-color: #f05f40;
+	height: inherit;
+}
+
+
+.friendslist_wraper {
+	position: absolute;
+	bottom:50px;
+	right:0px;]
+	width: 20%;
+	height: 80%;
+	border-style: solid;
+}
+
+.toolbar {
+	position: absolute;
+	bottom: 0;	
+}
+
+
+/*   test        */
+#content {width:100%; float:left; margin-right:-500px;}
+#sidebar {width:500px; float:left;}
+
+ul {list-style:none;}
+li {line-height:1.3em;}
+.col2 {margin-left:100px;}
+.col3 {margin-left:200px;}
+.top {margin-top:-2.6em;} /* the clincher */
+
