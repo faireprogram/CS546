@@ -53,10 +53,17 @@ function read_contents($file_path) {
 // 			$msg_arrs[$chat_message->sender][] = $chat_message->chat_content->content;
 			//$chat_message->
 		}
-// 		ftruncate($handle, 0);
+ 		if(count($msg_arrs) !== 0) {
+ 			$writehandle = fopen($file_path, "wb");
+ 			ftruncate($writehandle, 0);
+ 			rewind($writehandle);
+ 			fwrite($writehandle, "");
+ 			fflush($writehandle);
+ 			fclose($writehandle);
+ 		}
 	} 
 	
-	pclose($handle);
+	fclose($handle);
 	return $msg_arrs;
 }
 

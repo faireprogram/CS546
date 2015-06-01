@@ -1,29 +1,158 @@
 /* layout */
 
+div {
+	border-style: solid;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;	
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.wrapper {
+/*  	padding: 15px;  */
+}
+
 .container_wrapper {
 	height: 100%;
 }
 
-.desktop {
-	background-color: #f05f40;
+.desktop_wrapper {
+	background-color: #FFFCFC;
 	height: inherit;
 }
 
 
-.friendslist_wraper {
+.friendslist_wrapper {
 	position: absolute;
-	bottom:50px;
-	right:0px;]
-	width: 20%;
-	height: 80%;
-	border-style: solid;
+	bottom:6.66%;
+	right:0px;
+	width:20%;
+	height: 93.34%;
+	background-color: #B156A6;
 }
 
-.toolbar {
+.toolbar_wrapper {
 	position: absolute;
+	background-color: #AA5939;
+	height: 6.66%;
+	width: 100%;
 	bottom: 0;	
 }
 
+.dialog_wrapper {
+	position: absolute;
+	background-color: #8C8D9E;
+	height: 70%;
+	width: 60%;
+	left:10%;
+	top: 15%;
+	bottom: 15%;
+	margin-top: -15px;
+	overflow: auto;
+}
+
+.profile_icon {
+	width: 50px;
+}
+
+.profile_icon.left {
+	margin-right: 5px;
+	float: none;
+}
+
+.profile_icon.right {
+	margin-left: 5px;
+	float: none;
+}
+
+.profile_name {
+	clear: both;
+	display: block;
+	text-align: center;
+	word-wrap: break-word;
+	max-width: 50px;
+}
+
+.profile_name.right {
+	padding-left: 5px;
+	float: none;
+}
+
+/*
+ * Bubble Triangle
+ */
+ 
+.messagebox {
+	padding: 5px;
+	margin: 5px 5px 8px 5px;
+}
+
+ 
+.message {
+	 min-width: 40%;
+	 word-wrap: break-word;
+ 	 max-width: 65%;
+ 	 display: block;
+ 	 position: relative;
+ 	 margin-top: 10px;
+ 	 padding: 15px;
+ 	 -webkit-border-radius: 10px;
+	 -moz-border-radius: 10px;
+	 border-radius: 10px;
+  }
+
+.message.left {
+ 	 background: linear-gradient(#075698, #2e88c4);
+ 	 margin-left: 15px;
+ }
+ 
+.message.left:after {
+  content: ".";
+  top:15px;
+  left:-15px;
+  position: absolute;
+  border-width:5px 15px 5px 0; /* vary these values to change the angle of the vertex */
+  border-color: transparent #075698;
+  border-style: solid;
+  width: 0;
+  height: 0;
+}
+
+.message.right {
+ 	 background: linear-gradient(#FDFDFD, #FDFDFD);
+ 	 margin-right: 15px;
+}
+ 
+.message.right:after {
+  content: ".";
+  top:15px;
+  right:-15px;
+  position: absolute;
+  border-width:5px 0px 5px 15px; /* vary these values to change the angle of the vertex */
+  border-color: transparent #FDFDFD;
+  border-style: solid;
+  width: 0;
+  height: 0;
+}
+ 
+ 
+ 
+ .message-box-right {
+ 	 background: linear-gradient(#075698, #2e88c4);
+ }
 
 /*   test        */
 #content {width:100%; float:left; margin-right:-500px;}

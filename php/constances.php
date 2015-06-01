@@ -11,8 +11,6 @@ define("WAITING_TIME", 30);
 
 define("DEBUG", TRUE);
 
-echo DATA_CHAT_DIR_MAILBOX;
-
 abstract class FILE_OP_STATE {
 	 const SUCCESS = 1;
 	 const LOCKED = 2; // locked by others
