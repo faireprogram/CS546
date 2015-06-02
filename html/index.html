@@ -42,12 +42,31 @@
 			</div>
 			
 			<div class="toolbar_wrapper wrapper">
-				toolbar
-					<p class="messageleft"> Hello! </p>
+				<section id="toolbar" class="toolbar">
+					<article onclick="javascript:duckchat.nicelyShowWindow($('#chat').parent());">
+						<img src="../resource/img/avatar.jpg">
+<!-- 						<p>Yzzz</p> -->
+					</article>
+					<article>
+						kkkkkk
+					</article>
+					<article>
+						kkkkkk
+					</article>
+					
+				</section>
 			</div>
 			
 			<div class="dialog_wrapper wrapper">
-				<section id = "chat">
+				<nav class="upbar">
+					<ul class="item_container clearfix">
+						<li class="item " onclick="javascript:duckchat.nicelyCloseWindow($('#chat').parent());"><i class="fa fa-minus"></i></li>
+						<li class="item"><i class="fa fa-laptop"></i></li>
+						<li class="item right" onclick="javascript:duckchat.nicelyCloseWindow($('#chat').parent());"><i class="fa fa-times"></i></li>
+					</ul>
+				</nav>
+				
+				<section id = "chat" class="chat_container">
 								<!-- MESSAGE HERE!!!!!!! -->
 				</section>
 			</div>

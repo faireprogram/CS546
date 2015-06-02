@@ -38,6 +38,14 @@
 		handler.animate({ scrollTop: handler[0].scrollHeight}, 1000);
 	}
 	
+	var nicelyCloseWindow = function(target) {
+		target.hide();
+	}
+	
+	var nicelyShowWindow = function(target) {
+		target.show();
+	}
+	
 	/*
 	 * Duck Chat Object!
 	 */
@@ -91,10 +99,12 @@
 								}
 							}
 				});
-			}
-	
-	
+			},
 			
+			// UI PART
+			nicelyCloseWindow: nicelyCloseWindow,
+			
+			nicelyShowWindow: nicelyShowWindow
 	}
 	
 	global.DuckChat = DuckChat;
