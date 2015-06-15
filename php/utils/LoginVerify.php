@@ -1,5 +1,5 @@
 <?php
-include "./utils/connHelper.php";
+include "./php/utils/connHelper.php";
 if(isset($_GET["uname"]) && isset($_GET["pwd"])){
 	if($_GET["uname"] == ""){
 		echo "Please enter your user name";
@@ -22,7 +22,7 @@ if(isset($_GET["uname"]) && isset($_GET["pwd"])){
 			}
 			else{
 				echo "This user id is not registered!" . "</br>\n";
-				echo "Click" . "<a href=\"./html/register.html\">"."here"."</a>" ."to register";
+				echo "Click" . "<a href=\"./php/Register.php\">"."here"."</a>" ."to register";
 			}
 		}
 	}

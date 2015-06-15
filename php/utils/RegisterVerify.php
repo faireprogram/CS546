@@ -1,5 +1,5 @@
 <?php
-include "./utils/connHelper.php";
+include "./php/utils/connHelper.php";
 $db = new database ();
 $db->setup ( "ZDing", "19930920Ding", "localhost", "mydb" );
 if (isset ( $_POST ['formsubmitted'] )) {

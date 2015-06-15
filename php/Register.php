@@ -6,7 +6,7 @@
 </head>
 <body>
 	<section id = "Register">
-	<form method="POST" action="./utils/LoginVerify.php">
+	<form method="POST" action="./php/utils/RegisterVerify.php">
 		<header>
 		<b>User please register here.</b><br>
 		</header>

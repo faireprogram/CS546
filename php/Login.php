@@ -8,7 +8,7 @@
   
   <body>  
 	<section id = "login">
-	<form method="GET" action="./utils/LoginVerify.php">
+	<form method="GET" action="./php/utils/LoginVerify.php">
 		<header>
 		<b>User please log in here.</b></br>
 		</header>
@@ -23,7 +23,7 @@
 		<p>
 			<input type="submit" name="submit" value="Log in"/>
 			<input type="reset" name="reset" value="Cancel"/>
-			<input type="submit" name="register" value = "Register"/>
+			<label><a href="./php/Register.php">Register</a></label>
 		</p>
 
 	</form>
