@@ -1,7 +1,5 @@
 <?php
-include "databaseClassMySQLi.php";
-$db = new database();
-$db->setup ( "ZDing", "19930920Ding", "localhost", "mydb" );
+include "./utils/connHelper.php";
 if(isset($_GET["uname"]) && isset($_GET["pwd"])){
 	if($_GET["uname"] == ""){
 		echo "Please enter your user name";
@@ -14,7 +12,7 @@ if(isset($_GET["uname"]) && isset($_GET["pwd"])){
 		$pwd = $_GET["pwd"];
 		$sql = "select user_id, user_pwd from user_authentication where user_id ='$uname'
 		and user_pwd = '$pwd'";
-		if(!$res = $db->send_sql($sql)){
+		if(!$res = mysqli_query($dbc,$sql)){
 			echo "DB error"."</br>\n";
 		}
 		else{
