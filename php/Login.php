@@ -8,22 +8,22 @@
   
   <body>  
 	<section id = "login">
-	<form method=GET action="./utils/LoginVerify.php">
+	<form method="GET" action="./utils/LoginVerify.php">
 		<header>
-		<b>User please log in here.</b><br>
+		<b>User please log in here.</b></br>
 		</header>
-		<br>
+		</br>
 		<b>User Name:</b>
-		<input type="text" name="uname">
-		<br>
-		<br>
+		<input type="text" name="uname" size="25"/>
+		</br>
+		</br>
 		<b>  Password:</b>
-		<input type="text" name="pwd">
+		<input type="text" name="pwd" size="25"/>
 	
 		<p>
-			<input type="submit" name="submit" value="Log in">
-			<input type="reset" name="reset" value="Cancel">
-			<input type="submit" name="register" value = "Register">
+			<input type="submit" name="submit" value="Log in"/>
+			<input type="reset" name="reset" value="Cancel"/>
+			<input type="submit" name="register" value = "Register"/>
 		</p>
 
 	</form>
