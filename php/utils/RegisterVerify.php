@@ -1,7 +1,5 @@
 <?php
 include "./php/utils/connHelper.php";
-$db = new database ();
-$db->setup ( "ZDing", "19930920Ding", "localhost", "mydb" );
 if (isset ( $_POST ['formsubmitted'] )) {
 	$error = array (); // Declare An Array to store any error message
 	if (empty ( $_POST ['uname'] )) { // if no name has been supplied
@@ -42,6 +40,24 @@ if (isset ( $_POST ['formsubmitted'] )) {
 	} else {
 		$addr = $_POST ['address'];
 	}
+	if (empty ($_POST['rq1'])){
+		$error [] = 'Please answer the first question';
+	}
+	else{
+		$rq1 = $_POST ['rq1'];
+	}
+	if (empty ($_POST['rq2'])){
+		$error [] = 'Please answer the second question';
+	}
+	else{
+		$rq2 = $_POST ['rq2'];
+	}
+	if (empty ($_POST['rq3'])){
+		$error [] = 'Please answer the third question';
+	}
+	else{
+		$rq3 = $_POST ['rq3'];
+	}
 	
 	if (empty ( $error )) // send to Database if there's no error '
 
@@ -57,7 +73,7 @@ if (isset ( $_POST ['formsubmitted'] )) {
 			$activation = md5 ( uniqid ( rand (), true ) );
 			
 			$query_insert_user = "INSERT INTO user ( 'user_name', 'user_email', 'user_cellphone', 'user_address') VALUES ( '$name', '$Email', $cell, '$addr')";
-			$query_insert_ua = "INSERT INTO user_authentication ('user_id', 'user_pwd') VALUES('$name', '$Password')";
+			$query_insert_ua = "INSERT INTO user_authentication ('user_id', 'user_pwd', 'retrive_q1', 'retrive_q2', 'retrive_q3') VALUES('$name', '$Password', '$rq1', '$rq2', '$rq3')";
 			$result_insert_user = mysqli_query ( $dbc, $query_insert_user );
 			$result_insert_ua = mysqli_query($dbc, $query_insert_ua);
 			if (! $result_insert_user || !$result_insert_ua) {

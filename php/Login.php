@@ -3,20 +3,20 @@
   <head>
     <title>CS546 Final Project</title>
     <meta name="description=" content="My name is Zejie Ding. I work with Wen Zhang on CS546 final project">
-    <meta charset=UTF-8">
+    <meta charset="UTF-8">
   </head>
   
   <body>  
 	<section id = "login">
 	<form method="GET" action="./php/utils/LoginVerify.php">
 		<header>
-		<b>User please log in here.</b></br>
+		<b>User please log in here.</b><br>
 		</header>
-		</br>
+		<br>
 		<b>User Name:</b>
 		<input type="text" name="uname" size="25"/>
-		</br>
-		</br>
+		<br>
+		<br>
 		<b>  Password:</b>
 		<input type="text" name="pwd" size="25"/>
 	
