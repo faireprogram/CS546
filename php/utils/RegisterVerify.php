@@ -58,6 +58,18 @@ if (isset ( $_POST ['formsubmitted'] )) {
 	else{
 		$rq3 = $_POST ['rq3'];
 	}
+	if(empty ($_POST['age'] )){
+		$error [] = 'Please enter your age';
+	}
+	else{
+		$age = $_POST['age'];
+	}
+	if(empty($_POST['gender'])){
+		$error [] = 'Please choose your gender';
+	}
+	else{
+		$gender = $_POST['gender'];
+	}
 	
 	if (empty ( $error )) // send to Database if there's no error '
 
@@ -72,11 +84,10 @@ if (isset ( $_POST ['formsubmitted'] )) {
 			// Create a unique activation code:
 			$activation = md5 ( uniqid ( rand (), true ) );
 			
-			$query_insert_user = "INSERT INTO user ( 'user_name', 'user_email', 'user_cellphone', 'user_address') VALUES ( '$name', '$Email', $cell, '$addr')";
-			$query_insert_ua = "INSERT INTO user_authentication ('user_id', 'user_pwd', 'retrive_q1', 'retrive_q2', 'retrive_q3') VALUES('$name', '$Password', '$rq1', '$rq2', '$rq3')";
+			$query_insert_user = "INSERT INTO user ( 'user_name', 'user_email', 'user_cellphone', 'user_address', 'user_age', 'user_gender', 'retrieve_q1', 'retrieve_q2', 'retrieve_q3') 
+			VALUES ( '$name', '$Email', $cell, '$addr', '$age', '$gender', '$rq1', '$rq2', '$rq3')";
 			$result_insert_user = mysqli_query ( $dbc, $query_insert_user );
-			$result_insert_ua = mysqli_query($dbc, $query_insert_ua);
-			if (! $result_insert_user || !$result_insert_ua) {
+			if (! $result_insert_user) {
 				echo 'Query Failed ';
 			}
 			if (mysqli_affected_rows ( $dbc ) == 1) { // If the Insert Query was successfull.

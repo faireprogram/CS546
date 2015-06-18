@@ -10,8 +10,8 @@ if(isset($_GET["uname"]) && isset($_GET["pwd"])){
 	else{
 		$uname = $_GET["uname"];
 		$pwd = $_GET["pwd"];
-		$sql = "select user_id, user_pwd from user_authentication where user_id ='$uname'
-		and user_pwd = '$pwd'";
+		$sql = "select * from user where user_id ='$uname' or user_name = '$uname' 
+		or user_email = '$uname' and user_pwd = '$pwd'";
 		if(!$res = mysqli_query($dbc,$sql)){
 			echo "DB error"."</br>\n";
 		}

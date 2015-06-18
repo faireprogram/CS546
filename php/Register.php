@@ -25,6 +25,13 @@
 		<input type="text" id="cell" name="cell" size="25"/>
 		<b> Address:</b>
 		<input type="text" id="address" name="address" size="25"/>
+		<b> Age:</b>
+		<input type="text" id="age" name="age" size="25"/>
+		<b> Gender:</b>
+		<input type="radio" name="gender" id="male"
+				value="male" /> <label for="male">Male</label>
+		<input type="radio" name="gender" id="female"
+				value="female" /> <label for="female">Female</label>
 		<b> What is the name of your first school?</b>
 		<input type="text" id="rq1" name="rq1" size="25"/>
 		<b> What is your pet's name?</b>

@@ -14,7 +14,7 @@
 		</header>
 		<br>
 		<b>User Name:</b>
-		<input type="text" name="uname" size="25"/>
+		<input type="text" name="uname" size="25" placeholder = "User ID/User Name/E-mail/"/>
 		<br>
 		<br>
 		<b>  Password:</b>
