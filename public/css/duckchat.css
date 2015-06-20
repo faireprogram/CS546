@@ -7,6 +7,11 @@ body {
     user-select: none;
 }
 
+html {
+	-ms-overflow-style: none;
+	overflow: hidden;
+}
+
 /* layout */
 
 div {
@@ -247,6 +252,14 @@ div {
 	text-align: center;
 	background-color: #568FAC;
 	opacity: 0.5;
+}
+
+.toolbar article.newmessage {
+	background: linear-gradient(
+      to right, 
+      red, #f06d06,
+      yellow
+    );
 }
 
 .toolbar article:hover {

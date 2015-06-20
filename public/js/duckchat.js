@@ -378,6 +378,7 @@
 	}
 	
 	function _togglewin(win, isopen) {
+		win.data("bottomwin").entity.removeClass('newmessage');
 		if(isopen) {
 			this.nicelyMinimizeWindow();
 		} else {
@@ -386,20 +387,23 @@
 	}
 	
 	function _createNewWindow(li) {
-		var targetId = li.data("id");
+		invoke(this, _createNewWindowByAttributes, li.data("id"), li.data("name"));
+	}
+	
+	function _createNewWindowByAttributes(targetId, targetName) {
+		var targetId = targetId;
 		var compositeId =  _getCompositeId(this.data["attributes"]["id"], targetId);
 		var findresult = invoke(this, _findwinbyid, compositeId);
 		if(findresult) {
 			return findresult;
 		}
 		
-		var diag_panel = $("<section></section>").addClass("dialog_panel").css("dispaly", "none");
-		
+		var diag_panel = $("<section></section>").addClass("dialog_panel");
 		var upbar =  $("<nav></nav>").addClass("upbar");
 		var ul = $("<ul></ul>").addClass("item_container clearfix");
 		var liminus = $("<li></li>").addClass("item");
 		var liclose = $("<li></li>").addClass("item right");
-		var ptext = $("<li></li>").addClass("item middle").text(li.data("name"));
+		var ptext = $("<li></li>").addClass("item middle").text(targetName);
 		var iminus = _createwinminus();
 		var iclose = _createwinclose();
 		liminus.append(iminus);
@@ -407,7 +411,7 @@
 		ul.append(liminus, ptext, liclose);
 		upbar.append(ul);
 		
-		var chat =$("<div></div>").addClass("chat_container").attr("id", compositeId);
+		var chat =$("<section></section>").addClass("chat_container").attr("id", compositeId);
 		var inputbox = $("<section></section>").addClass("input_container");
 		var textArea = $("<div></div>").addClass("textarea col-3").attr("contenteditable", true).text("Input HERE!!!!!!");
 		var senddiv = $("<div></div>").addClass("sendbutton col-1");
@@ -452,17 +456,18 @@
 		
 		$("#toolbar").append(bottomwin);
 		$(".dialog_wrapper").append(diag_panel);
+		diag_panel.css("dispaly", "none");
 		// ---------------- bind value
 		this.wins.push(diag_panel);
 		diag_panel.data("id", compositeId);
 		diag_panel.data("historyoffset", 0);
-		diag_panel.data("owner", {id: li.data("id"), name: li.data("name")});
+		diag_panel.data("owner", {id: targetId, name: targetName});
 		diag_panel.data("self", {id: this.data.attributes["id"], name: this.data.attributes["name"]});
 		
 		// ---------------- bottom win
 		bottomwin.data("reference", {entity: diag_panel, id: compositeId});
 		bottomwin.data("id", bottomwinId);
-		bottomwin.data("owner", {id: li.data("id"), name: li.data("name")});
+		bottomwin.data("owner", {id: targetId, name: targetName});
 		diag_panel.data("bottomwin", {entity : bottomwin, id: bottomwinId});
 		
 		
@@ -749,6 +754,59 @@
 		
 	}
 	
+	function _dealReSendMsg(cmd) {
+		var receiverId = cmd["content"]["receiver"]["id"];
+		var senderId = cmd["content"]["sender"]["id"];
+		var msg = cmd["content"]["message"];
+		var compositeId = _getCompositeId(receiverId, senderId);
+		var win = invoke(this, _findwinbyid, compositeId);
+		// if there's a window opeen for this session
+		var owner = cmd["content"]["sender"];
+		if(senderId == this.data.attributes["id"]) {
+			owner = cmd["content"]["receiver"];
+		}
+		/*
+		 * win has been open before
+		 */
+		if(win) {
+			var chatcontainer = $("#" + compositeId);
+			if(senderId == this.data.attributes["id"]) {
+				invoke(this, addMessagetoLeft, cmd["content"]["sender"], msg , chatcontainer);
+			} else {
+				invoke(this, addMessagetoRight, cmd["content"]["sender"], msg , chatcontainer);
+			}
+			if(this.activewin && this.activewin.data("id") != compositeId) {
+				// add toolbar notification
+				win.data("bottomwin")["entity"].addClass("newmessage");
+			} else {
+				this.nicelyShowWindow(win);
+			}
+		} else {
+			var newwin = invoke(this, _createNewWindowByAttributes, owner["id"], owner["name"]);
+			var chatcontainer = $("#" + compositeId);
+			if(senderId == this.data.attributes["id"]) {
+				invoke(this, addMessagetoLeft, cmd["content"]["sender"], msg , chatcontainer);
+			} else {
+				invoke(this, addMessagetoRight, cmd["content"]["sender"], msg , chatcontainer);
+			}
+			if(this.activewin) {
+				newwin.data("bottomwin")["entity"].addClass("newmessage");
+			} else {
+				this.nicelyShowWindow(newwin);
+			}
+		}
+		scrollMessageWindow($("#" + compositeId));
+	}
+	
+	function _dealMsg(cmd) {
+		if(!cmd) {
+			return;
+		}
+		if(cmd["type"] && cmd["type"] == "RE_SEND_MSG") {
+			invoke(this, _dealReSendMsg, cmd);
+		}
+	}
+	
 	var invoke = function(obj, func) {
 		var par = [];
 		for(var i=2; i<arguments.length; i++)
@@ -758,28 +816,28 @@
 		return func.apply(obj, par);
 	}
 	
-	var addMessagetoLeft = function(json_message, holder) {
+	var addMessagetoLeft = function(sender, message , holder) {
 		var article = $('<article class="messagebox clearfix"></article>');
 		//header
 		var header = $('<header class="left"></header>');
-		var profile_icon = $('<img class="profile_icon left " src="../resource/img/avatar.jpg"/>');
-		var profile_name = $('<p class="profile_name">' + json_message.sender +'</p>');
+		var profile_icon = $('<img class="profile_icon left " src="public/img/avatar.jpg"/>');
+		var profile_name = $('<p class="profile_name">' + sender.name +'</p>');
 		header.append(profile_icon, profile_name);
 		//message
-		var message = $('<p class="message left">' + json_message.chat_content.content + '</p>');
+		var message = $('<p class="message left">' + message + '</p>');
 		article.append(header, message);
 		holder.append(article);
 	}
 	
-	var addMessagetoRight = function(json_message, holder) {
+	var addMessagetoRight = function(sender,message, holder) {
 		var article = $('<article class="messagebox clearfix"></article>');
 		//header
 		var header = $('<header class="right"></header>');
-		var profile_icon = $('<img class="profile_icon right " src="../resource/img/avatar.jpg"/>');
-		var profile_name = $('<p class="profile_name right"></p>').text(json_message.sender);
+		var profile_icon = $('<img class="profile_icon right " src="public/img/avatar.jpg"/>');
+		var profile_name = $('<p class="profile_name right"></p>').text(sender.name);
 		header.append(profile_icon, profile_name);
 		//message
-		var message = $('<p class="message right">' + json_message.chat_content.content + '</p>');
+		var message = $('<p class="message right">' + message + '</p>');
 		article.append(header, message);
 		holder.append(article);
 	}
@@ -802,6 +860,7 @@
 		if(this.activewin) {
 			this.activewin.hide();
 			this.activewin.data("isopen", false);
+			this.activewin = null;
 		}
 	}
 	
@@ -874,9 +933,14 @@
 			pollingtime: 1000, // polling time 1 seconds
 			
 			push_data_silencely: function(itm, sender, receiver) {
+				/*
+				 * Show Left Message Bar
+				 */
+				
 				var date = new Date();
 				var url = "php/service/Msgservice.php";
 				var text = $(itm).parent().parent().text() ? $(itm).parent().parent().text().trim() : "";
+				var compositeId = _getCompositeId(sender["id"], receiver["id"]);
 				var cmd = {
 				 		type : "SEND_MSG",
 				 		content	: {
@@ -891,7 +955,7 @@
 				 			message : text
 				 // 				"message" : "This is a TEST!!"
 				 		},
-				 		time : date	
+				 		time : date.getTime()	
 					}
 				$.ajax(
 						{
@@ -899,11 +963,18 @@
 							type:	 "POST",
 							data:	 {"cmd" : cmd},
 							success: function(result){
+								
 								if(result.trim() == "ok") {
-									$(".loader").css("display", "none");
+									var setTimeoutid = setTimeout(function(){
+										  addMessagetoLeft(sender, text ,$("#" + compositeId));
+										  scrollMessageWindow($("#" + compositeId));
+										$(".loader").css("display", "none");
+									}, 1500);
 								} else {
-									$(".loader").css("display", "none");
-									_setwarning_message("Failed To send Message!!");
+									var setTimeoutid = setTimeout(function(){
+										$(".loader").css("display", "none");
+										_setwarning_message("Failed To send Message!!");
+									}, 20000);
 								}
 								
 							}
@@ -911,13 +982,6 @@
 			},
 			
 			pushDataToScreen: function() {
-//				var sender = $("#sender_id").val();
-//				var msg = $("#msg_id").val();
-//				json_message = {};
-//				json_message.sender = sender;
-//				json_message.chat_content = {};
-//				json_message.chat_content.content = msg;
-			   addMessagetoLeft(json_message, $("#chat"));
 			   scrollMessageWindow($("#chat").parent());
 			},
 			
@@ -948,17 +1012,12 @@
 										jsonObjs.push(JSON.parse(arrays[index]));
 									}
 								}
-								console.log(jsonObjs);
-//								for (var message in jsonObjs) {
-//									   var messages = all_messages[sender];
-//									   for (var key in messages) {
-//									       console.log(messages[key].chat_content.content);
-//									       
-//									       
-//									       addMessagetoRight(messages[key], $("#chat"));
-//									       scrollMessageWindow($("#chat").parent());
-//									   }
-//								}
+								if(jsonObjs.length > 0) {
+									for(var index in jsonObjs) {
+										var obj = jsonObjs[index];
+										invoke(duck, _dealMsg, obj);
+									}
+								}
 							}
 				});
 			},

@@ -10,7 +10,7 @@ db();
 		"type" => "ADD_FRIEND",
 		"content" => array(
 			"invitor" => array(
-				"id" => "0000000007",
+				"id" => "0000000008",
 				"name" => "sdd"
 			),
 			"receiver" => array(

@@ -27,7 +27,7 @@
 		
 		$receiverid = $cmd["content"]["receiver"]["id"];
 		$senderid = $cmd["content"]["sender"]["id"];
-		writeMessage($senderid, $receiverid, json_encode($logmsgsent));
+		writeMessage($senderid, $receiverid, pc(json_encode($logmsgsent)));
 	}
 	
 	function _log_addfriend($cmd) {
@@ -44,7 +44,7 @@
 		$row = $mysqldi->next_row();
 		$newlog = "";
 		if($row) {
-			$newlog = $row["log"].$logmsgsent.PHP_EOL;
+			$newlog = pc($row["log"]).$logmsgsent.PHP_EOL;
 		} else {
 			$newlog = $logmsgsent.PHP_EOL;
 		}
