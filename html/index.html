@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Title</title>
+		<title>DuckChat System 1.0</title>
 		
 		<link type="text/css" href="../resource/css/bootstrap-clean.css" rel="stylesheet">
 		<link type="text/css" href="../resource/css/duckchat.css" rel="stylesheet">
@@ -15,30 +15,31 @@
 		 	var duckchat = new DuckChat();
 		</script>
 	</head>
-	<body>
+	<body onload="javascript:duckchat.initiliaze();">
 		<div class="container_wrapper">
 		
 			<div class="desktop_wrapper wrapper">
-			desktop
 			</div>
 		
 			<div class="friendslist_wrapper wrapper">
-				<form id="messageform_id" action="http://localhost/cs546/php/function/chat/ChatFileOperater.php?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=14331197437344" method="post">
-					sender: <input id="sender_id" type="text" name="sender"/> <br/>
-					receiver: <input id="receiver_id" type="text" name="receiver"/> <br/>
-					<hr/>
-					<textarea id="msg_id" rows="10" cols="10" name="msg"></textarea>
-					
-					<button type="button" onclick="javascript:duckchat.push_data_silencely($('#messageform_id').serialize(), $('#messageform_id').attr('action'));duckchat.pushDataToScreen();">submit</button>
-				</form>
-				
-				<hr/>
-				<form id="connect_form_id" action="http://localhost/cs546/php/function/chat/PollingChat.php?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=14331197437344" method="post">
-					Name: <input type="text" name="connecter"/> <br/>
-					<hr/>
-					<p id="connect_feedback">You're not Connected!</p>
-					<button type="button" onclick="javascript:duckchat.push_data_silencely($('#connect_form_id').serialize(), $('#connect_form_id').attr('action'));setInterval(function(){duckchat.shortpolling();}, duckchat.pollingtime);">connect <i class="fa fa-reply"></i></button>
-				</form>
+				<section class="userpannerl">
+					<div class="user_info"></div>
+					<p class="friendlist_title">FRIENDS LIST</p>
+					<section id="friend_list_id" class="friendlist">
+					<!-- Friend List -->
+					</section>
+					<div class="bottom_link">
+						<p></p>
+						<ul class="clearfix">
+							<li><i class="fa fa-user-plus"></i>add friends</li>
+							<li  onclick="javascript: duckchat.showCancelConfirm(this);"><i class="fa fa-cutlery"></i>edit groups</li>
+						</ul>
+						<ul class="clearfix" style="display: none;">
+							<li onclick="javascript:duckchat.confirmChanges($(this).parent());"><i class="fa fa-check"></i>confirm</li>
+							<li onclick="javascript:duckchat.cancelChanges(this);"><i class="fa fa-times"></i>cancel</li>
+						</ul>
+					</div>
+			</section>
 			</div>
 			
 			<div class="toolbar_wrapper wrapper">
@@ -47,28 +48,76 @@
 						<img src="../resource/img/avatar.jpg">
 <!-- 						<p>Yzzz</p> -->
 					</article>
-					<article>
-						kkkkkk
-					</article>
-					<article>
-						kkkkkk
-					</article>
-					
 				</section>
 			</div>
 			
 			<div class="dialog_wrapper wrapper">
-				<nav class="upbar">
-					<ul class="item_container clearfix">
-						<li class="item " onclick="javascript:duckchat.nicelyCloseWindow($('#chat').parent());"><i class="fa fa-minus"></i></li>
-						<li class="item"><i class="fa fa-laptop"></i></li>
-						<li class="item right" onclick="javascript:duckchat.nicelyCloseWindow($('#chat').parent());"><i class="fa fa-times"></i></li>
-					</ul>
-				</nav>
-				
-				<section id = "chat" class="chat_container">
-								<!-- MESSAGE HERE!!!!!!! -->
-				</section>
+<!-- 				<section class="dialog_panel"> -->
+<!-- 					<nav class="upbar"> -->
+<!-- 						<ul class="item_container clearfix"> -->
+<!-- 							<li class="item " onclick="javascript:duckchat.nicelyCloseWindow($('#chat').parent());"><i class="fa fa-minus"></i></li> -->
+<!-- 							<li class="item right" onclick="javascript:duckchat.nicelyCloseWindow($('#chat').parent());"><i class="fa fa-times"></i></li> -->
+<!-- 						</ul> -->
+<!-- 					</nav> -->
+					
+<!-- 					<section id = "chat" class="chat_container"> -->
+<!-- 					Message Here! -->
+<!-- 						<article class="messagebox clearfix"> -->
+<!-- 							<header class="left"> -->
+<!-- 								<img class="profile_icon left" src="../resource/img/avatar.jpg"/> -->
+<!-- 								<p class="profile_name">name.zhwjljlfdj</p> -->
+<!-- 							</header> -->
+							
+<!-- 							<p class="message left">  -->
+<!-- 								 Hello!  -->
+<!-- 							</p> -->
+						
+<!-- 						</article> -->
+<!-- 						<article class="messagebox clearfix"> -->
+<!-- 								<header class="right"> -->
+<!-- 									<img class="profile_icon right" src="../resource/img/avatar.jpg"/> -->
+<!-- 									<p class="profile_name right">name.zhwjljlfdj</p> -->
+<!-- 								</header> -->
+<!-- 								<p class="message right"> Helloaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaazzzzzzzzzzzzzzzz! </p> -->
+<!-- 						</article> -->
+<!-- 					</section> -->
+<!-- 					Message END! -->
+<!-- 					<section class="input_container" > -->
+<!-- 							<div  class="textarea col-3" contenteditable="true"> -->
+<!-- 								Input HERE!!!!!!! -->
+<!-- 							</div> -->
+<!-- 							<div  class="sendbutton col-1"> -->
+<!-- 								<i class="fa fa-check-square-o" onclick="duckchat.push_data_silencely(this);"></i> -->
+<!-- 								<i class="fa fa-plus-square" onclick="duckchat.shortpolling();"></i> -->
+<!-- 							</div>		 -->
+<!-- 					</section> -->
+<!-- 				</section> -->
+			</div>
+			
+			<div class="popup_wrapper" style="display: none;">
+					<section class="popup">
+						<p>
+<!-- 						Are you sure to post changes? -->
+						</p>	
+						<ul class="clearfix">
+							<li onclick="javascript:duckchat.ok();"><i class="fa fa-check green" ></i>confirm</li>
+							<li onclick="javascript:duckchat.cancel();"><i class="fa fa-times red" ></i>close</li>
+						</ul>
+					</section>
+					<div class="overlay"></div>
+			</div>
+			
+			<div class="selectmenu_wrapper" style="display: none;">
+					<section class="selectmenu">
+						<p>move to</p>
+						<ul class="clearfix">
+							<!-- SELECT MENU -->
+						</ul>
+					</section>
+			</div>
+			
+			<div class="messsagebar" style="display: none;">
+				<p><!-- MESSAGE BAR HERE --></p>
 			</div>
 		</div>
 	</body>

@@ -3,7 +3,7 @@
  * url: http://getbootstrap.com/css/
  * we just scratch part of them in our project!
  */
-
+:focus {outline:none;}
 html {
     font-family: sans-serif;
     -webkit-text-size-adjust: 100%;

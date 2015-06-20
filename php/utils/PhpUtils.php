@@ -3,13 +3,13 @@
 /**
  * @function:  current_autoloader 
  */
-function current_autoloader($class) {
-	include $class.'.class.php';
+function class_autoloader($class) {
+	include 'php/function/chat/class/'.$class.'.class.php';
 }
 
 /**
  * auto load php files!
  */
-spl_autoload_register('current_autoloader');
+spl_autoload_register('class_autoloader');
 
 ?>

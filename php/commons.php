@@ -1,12 +1,15 @@
 <?php
 
-require_once 'constances.php';
+include_once 'constances.php';
 
 // Utils method
-require_once 'utils/LogHelper.php';
-require_once 'utils/SqlHelper.php';
-require_once 'utils/StringHelper.php';
-require_once 'utils/FileHelper.php';
-require_once 'utils/PhpUtils.php';
+include_once 'utils/LogHelper.php';
+include_once 'utils/SqlHelper.php';
+include_once 'utils/StringHelper.php';
+include_once 'utils/FileHelper.php';
+include_once 'utils/PhpUtils.php';
+include_once 'utils/CmdHelper.php';
+
+date_default_timezone_set('UTC');
 
 ?>
