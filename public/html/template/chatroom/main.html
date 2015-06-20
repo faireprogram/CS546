@@ -13,6 +13,9 @@
 		
 		<script type="text/javascript">
 		 	var duckchat = new DuckChat();
+// 		 	setInterval(function() {
+// 		 		duckchat.shortpolling();
+// 		 	}, 3000);
 		</script>
 	</head>
 	<body onload="javascript:duckchat.initiliaze();">
@@ -111,6 +114,8 @@
 					</section>
 					<div class="overlay"></div>
 			</div>
+			
+			<div class="loader"  style="display: none;"></div>
 			
 			<div class="selectmenu_wrapper" style="display: none;">
 					<section class="selectmenu">

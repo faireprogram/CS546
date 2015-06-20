@@ -427,10 +427,12 @@
 			var id = event.data.id;
 			this.nicelyCloseWindow($('#' + id).parent());
 		}.bind(this));
-		sendButton.bind("click",{i:sendButton, id:compositeId}, function(event) {
+		sendButton.bind("click",{i:sendButton, id:compositeId, win:diag_panel}, function(event) {
 			var i = event.data.i;
 			var id = event.data.id;
-			this.push_data_silencely(i);
+			var win = event.data.win;
+			$(".loader").css("display", "block");
+			this.push_data_silencely(i, win.data("self"), win.data("owner"));
 		}.bind(this));
 		
 		// ---------------- create bottom win
@@ -871,7 +873,7 @@
 			
 			pollingtime: 1000, // polling time 1 seconds
 			
-			push_data_silencely: function(itm) {
+			push_data_silencely: function(itm, sender, receiver) {
 				var date = new Date();
 				var url = "php/service/Msgservice.php";
 				var text = $(itm).parent().parent().text() ? $(itm).parent().parent().text().trim() : "";
@@ -879,12 +881,12 @@
 				 		type : "SEND_MSG",
 				 		content	: {
 				 			sender	: {
-				 				id : "0000000001",
-				 				name : "sdd"
+				 				id : sender["id"],
+				 				name : sender["name"]
 				 			},
 				 			receiver : {
-				 				id : "0000000004",
-				 				name : "asss"
+				 				id : receiver["id"],
+				 				name : receiver["name"]
 				 			},
 				 			message : text
 				 // 				"message" : "This is a TEST!!"
@@ -897,8 +899,14 @@
 							type:	 "POST",
 							data:	 {"cmd" : cmd},
 							success: function(result){
-										$("#connect_feedback").text("Successful Connected!!!");
-									}
+								if(result.trim() == "ok") {
+									$(".loader").css("display", "none");
+								} else {
+									$(".loader").css("display", "none");
+									_setwarning_message("Failed To send Message!!");
+								}
+								
+							}
 						});
 			},
 			
@@ -919,18 +927,20 @@
 				var cmd = { type : "EXECUTE",
 								 content :{
 									 self : {
-							 			id : 4,
-						 				name : "sdd"
+							 			id : this.data["attributes"]["id"],
+						 				name : this.data["attributes"]["name"]
 							 		}
 								 },
 							 time : date
 						 };
+				var duck = this;
 				$.ajax(
 				{
 					url: 	 url, 
 					type:	 "POST",
 					data:	{cmd : cmd},
 					success: function(result){
+								console.log(result);
 								var arrays = result.split(/\r?\n/);
 								var jsonObjs = []
 								for(var index in arrays) {
@@ -938,15 +948,17 @@
 										jsonObjs.push(JSON.parse(arrays[index]));
 									}
 								}
-								var all_messages = $.parseJSON(result);
-								for (var sender in all_messages) {
-									   var messages = all_messages[sender];
-									   for (var key in messages) {
-									       console.log(messages[key].chat_content.content);
-									       addMessagetoRight(messages[key], $("#chat"));
-									       scrollMessageWindow($("#chat").parent());
-									   }
-								}
+								console.log(jsonObjs);
+//								for (var message in jsonObjs) {
+//									   var messages = all_messages[sender];
+//									   for (var key in messages) {
+//									       console.log(messages[key].chat_content.content);
+//									       
+//									       
+//									       addMessagetoRight(messages[key], $("#chat"));
+//									       scrollMessageWindow($("#chat").parent());
+//									   }
+//								}
 							}
 				});
 			},

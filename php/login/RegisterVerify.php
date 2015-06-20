@@ -115,7 +115,8 @@ function verifyandinsert() {
 				$template->parse("CONTENT", "main");
 			}
 		} else { // The email address is not available.
-			echo "That email address has already been registered.";
+			$template->assign("MESSAGE", 'That email address has already been registered.') ;
+			$template->parse("CONTENT", "main");
 		}
 	} else { // If the "error" array contains error msg , display them
 		

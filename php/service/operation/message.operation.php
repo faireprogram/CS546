@@ -31,6 +31,8 @@ include_once '../commons.php';
 		
 		/*log current send cmd*/
 		logaction($cmd);
+		
+		echo SUCCESS;
 	}
 	
    /**

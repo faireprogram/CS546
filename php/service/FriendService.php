@@ -14,7 +14,7 @@ db();
 				"name" => "sdd"
 			),
 			"receiver" => array(
-				"id" => "0000000001",
+				"id" => "0000000012",
 				"name" => "asss"
 			),
 			"group" => "DefaultGroup",
@@ -27,7 +27,7 @@ db();
 			"type" => "EXECUTE",
 			"content" => array(
 					"self" => array(
-							"id" => "0000000007",
+							"id" => "0000000012",
 							"name" => "sdd"
 					),
 			),

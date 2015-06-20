@@ -13,6 +13,7 @@ define("DEFAULT_GROUPNAME", "DefaultGroup");
 define("UNKNOWN_GROUPNAME", "Unknown Person");
 define("DFAULTIMG", "img.jpg");
 define("DEBUG", "true");
+define("SUCCESS", "ok");
 
 //This is the address that will appear coming from ( Sender )
 define('EMAIL', 'email@gmail.com');
