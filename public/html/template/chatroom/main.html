@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>DuckChat System 1.0</title>
+		
+		<link type="text/css" href="public/css/bootstrap-clean.css" rel="stylesheet">
+		<link type="text/css" href="public/css/duckchat.css" rel="stylesheet">
+		<link type="text/css" href="public/css/font-awesome.css" rel="stylesheet">
+		
+		<script type="text/javascript" src="public/js/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="public/js/duckchat.js"></script>
+		
+		<script type="text/javascript">
+		 	var duckchat = new DuckChat();
+		</script>
+	</head>
+	<body onload="javascript:duckchat.initiliaze();">
+		<div class="container_wrapper">
+		
+			<div class="desktop_wrapper wrapper">
+			</div>
+		
+			<div class="friendslist_wrapper wrapper">
+				<section class="userpannerl">
+					<div class="user_info">
+						<form action="php/login/LoginOut.php" method="POST">
+								<span class="hi">Hi!</span> <span class="name">{USER_NAME}</span>
+								<button type="submit">SignOut</button>
+						</form>
+					</div>
+					<p class="friendlist_title">FRIENDS LIST</p>
+					<section id="friend_list_id" class="friendlist">
+					<!-- Friend List -->
+					</section>
+					<div class="bottom_link">
+						<p></p>
+						<ul class="clearfix">
+							<li><i class="fa fa-user-plus"></i>add friends</li>
+							<li  onclick="javascript: duckchat.showCancelConfirm(this);"><i class="fa fa-cutlery"></i>edit groups</li>
+						</ul>
+						<ul class="clearfix" style="display: none;">
+							<li onclick="javascript:duckchat.confirmChanges($(this).parent());"><i class="fa fa-check"></i>confirm</li>
+							<li onclick="javascript:duckchat.cancelChanges(this);"><i class="fa fa-times"></i>cancel</li>
+						</ul>
+					</div>
+			</section>
+			</div>
+			
+			<div class="toolbar_wrapper wrapper">
+				<section id="toolbar" class="toolbar">
+					<article onclick="javascript:duckchat.nicelyShowWindow($('#chat').parent());">
+						<img src="../resource/img/avatar.jpg">
+<!-- 						<p>Yzzz</p> -->
+					</article>
+				</section>
+			</div>
+			
+			<div class="dialog_wrapper wrapper">
+<!-- 				<section class="dialog_panel"> -->
+<!-- 					<nav class="upbar"> -->
+<!-- 						<ul class="item_container clearfix"> -->
+<!-- 							<li class="item " onclick="javascript:duckchat.nicelyCloseWindow($('#chat').parent());"><i class="fa fa-minus"></i></li> -->
+<!-- 							<li class="item right" onclick="javascript:duckchat.nicelyCloseWindow($('#chat').parent());"><i class="fa fa-times"></i></li> -->
+<!-- 						</ul> -->
+<!-- 					</nav> -->
+					
+<!-- 					<section id = "chat" class="chat_container"> -->
+<!-- 					Message Here! -->
+<!-- 						<article class="messagebox clearfix"> -->
+<!-- 							<header class="left"> -->
+<!-- 								<img class="profile_icon left" src="../resource/img/avatar.jpg"/> -->
+<!-- 								<p class="profile_name">name.zhwjljlfdj</p> -->
+<!-- 							</header> -->
+							
+<!-- 							<p class="message left">  -->
+<!-- 								 Hello!  -->
+<!-- 							</p> -->
+						
+<!-- 						</article> -->
+<!-- 						<article class="messagebox clearfix"> -->
+<!-- 								<header class="right"> -->
+<!-- 									<img class="profile_icon right" src="../resource/img/avatar.jpg"/> -->
+<!-- 									<p class="profile_name right">name.zhwjljlfdj</p> -->
+<!-- 								</header> -->
+<!-- 								<p class="message right"> Helloaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaazzzzzzzzzzzzzzzz! </p> -->
+<!-- 						</article> -->
+<!-- 					</section> -->
+<!-- 					Message END! -->
+<!-- 					<section class="input_container" > -->
+<!-- 							<div  class="textarea col-3" contenteditable="true"> -->
+<!-- 								Input HERE!!!!!!! -->
+<!-- 							</div> -->
+<!-- 							<div  class="sendbutton col-1"> -->
+<!-- 								<i class="fa fa-check-square-o" onclick="duckchat.push_data_silencely(this);"></i> -->
+<!-- 								<i class="fa fa-plus-square" onclick="duckchat.shortpolling();"></i> -->
+<!-- 							</div>		 -->
+<!-- 					</section> -->
+<!-- 				</section> -->
+			</div>
+			
+			<div class="popup_wrapper" style="display: none;">
+					<section class="popup">
+						<p>
+<!-- 						Are you sure to post changes? -->
+						</p>	
+						<ul class="clearfix">
+							<li onclick="javascript:duckchat.ok();"><i class="fa fa-check green" ></i>confirm</li>
+							<li onclick="javascript:duckchat.cancel();"><i class="fa fa-times red" ></i>close</li>
+						</ul>
+					</section>
+					<div class="overlay"></div>
+			</div>
+			
+			<div class="selectmenu_wrapper" style="display: none;">
+					<section class="selectmenu">
+						<p>move to</p>
+						<ul class="clearfix">
+							<!-- SELECT MENU -->
+						</ul>
+					</section>
+			</div>
+			
+			<div class="messsagebar" style="display: none;">
+				<p><!-- MESSAGE BAR HERE --></p>
+			</div>
+		</div>
+	</body>
+</html>

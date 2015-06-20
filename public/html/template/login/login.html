@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CS546 Final Project</title>
+    <meta name="description=" content="My name is Zejie Ding. I work with Wen Zhang on CS546 final project">
+    <meta charset="UTF-8">
+  </head>
+  
+  <body>  
+	<section id = "login">
+	<form method="POST" action="Login.php">
+		<header>
+		<b>User please log in here.</b><br>
+		</header>
+		
+		<table>
+			<tr>
+				<td><b>User Name:</b></td>
+				<td><input type="text" name="uname" size="25" value="{USER}" placeholder = "User ID/User Name/E-mail/"/></td>
+			</tr>
+			<tr>
+				<td><b>Password:</b></td>
+				<td><input type="text" name="pwd" size="25"/></td>
+			</tr>
+		</table>
+		<br>
+		<input type="hidden" name="hiddensubmit">
+		<input type="submit" name="submit" value="Log in"/>
+		<input type="reset" name="reset" value="Cancel"/>
+		<label><a href="Register.php">Register</a></label>
+
+	</form>
+	
+	{ERROR_MESSAGE}
+	</section>
+  
+  </body>
+</html>

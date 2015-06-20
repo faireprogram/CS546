@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang = "en-us">
+<head>
+<meta charset="UTF-8">
+<title>User Register</title>
+</head>
+<body>
+	<section id = "Register">
+	<form method="POST" action="RegisterVerify.php">
+		<header>
+		<b>User please register here.</b><br>
+		</header>
+		
+		
+		<table>
+			<tr>
+				<td><b>User Name:</b></td>  
+				<td><input type="text" id="uname" name="uname" size="25"/></td>
+			</tr>
+			<tr>
+				<td><b>Password:</b></td>  
+				<td><input type="text" id="pwd" name="pwd" size="25"/></td>
+			</tr>
+			<tr>
+				<td><b> Confirm Password:</b></td>  
+				<td><input type="text" id="cpwd" name="cpwd" size="25"/></td>
+			</tr>
+			<tr>
+				<td><b>E-Mail:</b></td>  
+				<td><input type="text" id="e-mail" name="e-mail" size="25"/></td>
+			</tr>
+			<tr>
+				<td><b>Cellphone:</b></td>  
+				<td><input type="text" id="cell" name="cell" size="25"/></td>
+			</tr>
+			<tr>
+				<td><b>Address:</b></td>  
+				<td><input type="text" id="address" name="address" size="25"/></td>
+			</tr>
+			<tr>
+				<td><b>Age:</b></td>  
+				<td><input type="text" id="age" name="age" size="25"/></td>
+			</tr>
+			<tr>
+				<td><b>Gender:</b></td>  
+				<td>
+					<input type="radio" name="gender" id="male" value="male" /> <label for="male">Male</label>
+					<input type="radio" name="gender" id="female" value="female" /> <label for="female">Female</label>	
+				</td>
+			</tr>
+			<tr>
+				<td><b> What is the name of your first school?</b></td>  
+				<td>
+					<input type="text" id="rq1" name="rq1" size="25"/>
+				</td>
+			</tr>
+			<tr>
+				<td><b> What is your pet's name?</b></td>  
+				<td>
+					<input type="text" id="rq2" name="rq2" size="25"/>
+				</td>
+			</tr>
+			<tr>
+				<td><b>What is your last name</b></td>  
+				<td>
+					<input type="text" id="rq3" name="rq3" size="25"/>
+				</td>
+			</tr>
+		</table>
+			<input type="hidden" name="formsubmitted" value="TRUE" />
+      		<input type="submit" value="Register" />
+	</form>
+	</section>
+</body>
+</html>
