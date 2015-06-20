@@ -1,7 +1,7 @@
 <?php
 
 function pc($s) {
-	return addslashes(trim($s)); 
+	return addslashes(trim($s));
 }
 
 
