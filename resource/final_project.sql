@@ -1,84 +1,67 @@
 
-DROP SCHEMA IF EXISTS `cs546` ;
+drop schema if exists `cs546` ;
 
-CREATE SCHEMA IF NOT EXISTS `cs546` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 use `cs546`;
 
-DROP TABLE IF EXISTS `User` ;
+CREATE TABLE `user` (
+  `user_id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(45) NOT NULL,
+  `user_email` varchar(45) NOT NULL,
+  `user_cellphone` int(10) unsigned NOT NULL,
+  `user_address` varchar(100) DEFAULT NULL,
+  `friends` varchar(5000) DEFAULT NULL,
+  `user_pwd` varchar(45) NOT NULL,
+  `retrieve_q1` varchar(45) NOT NULL,
+  `retrieve_q2` varchar(45) NOT NULL,
+  `retrieve_q3` varchar(45) NOT NULL,
+  `user_age` int(10) unsigned DEFAULT NULL,
+  `user_gender` varchar(2) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_cellphone_UNIQUE` (`user_cellphone`),
+  UNIQUE KEY `user_email_UNIQUE` (`user_email`),
+  UNIQUE KEY `user_name_UNIQUE` (`user_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `User` (
-  `user_id` INT ZEROFILL UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_name` VARCHAR(45) NOT NULL,
-  `user_email` VARCHAR(45) NOT NULL,
-  `user_cellphone` INT NOT NULL,
-  `user_address` VARCHAR(100) NULL,
-  PRIMARY KEY (`user_id`))
-ENGINE = InnoDB;
 
-
-DROP TABLE IF EXISTS `User_Authentication` ;
-
-CREATE TABLE IF NOT EXISTS `User_Authentication` (
-  `id` INT ZEROFILL UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` INT ZEROFILL UNSIGNED NOT NULL,
-  `user_pwd` VARCHAR(45) NOT NULL,
-  `retrive_q1` VARCHAR(45) NOT NULL,
-  `retrive_q2` VARCHAR(45) NOT NULL,
-  `retrive_q3` VARCHAR(45) NOT NULL,
+CREATE TABLE `notifications` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned zerofill NOT NULL,
+  `notifications` longtext,
   PRIMARY KEY (`id`),
-  CONSTRAINT `user_auth_fk`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `User` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  KEY `index_user_id` (`user_id`),
+  CONSTRAINT `no_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `User_Login` ;
 
-CREATE TABLE IF NOT EXISTS `User_Login` (
-  `id` INT ZEROFILL UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id_cur` INT ZEROFILL UNSIGNED NOT NULL,
-  `login_ip` VARCHAR(45) NOT NULL,
-  `login_device` VARCHAR(45) NOT NULL,
-  `token` VARCHAR(45) NOT NULL,
-  `expire` TINYINT(1) NOT NULL,
+CREATE TABLE `cmd` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned zerofill NOT NULL,
+  `cmd` longtext,
   PRIMARY KEY (`id`),
-  INDEX `user_login_fk_idx` (`user_id_cur` ASC),
-  CONSTRAINT `user_login_fk`
-    FOREIGN KEY (`user_id_cur`)
-    REFERENCES `User` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  KEY `cmd_user_id` (`user_id`),
+  CONSTRAINT `cmd_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `Chat` ;
 
-CREATE TABLE IF NOT EXISTS `Chat` (
-  `id`  INT ZEROFILL UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` INT ZEROFILL UNSIGNED NULL,
-  `folder` VARCHAR(300) NULL,
-  `friends` VARCHAR(5000) NULL,
+CREATE TABLE `message` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `abuser` varchar(20) NOT NULL,
+  `log` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `user_login` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id_cur` int(10) unsigned zerofill NOT NULL,
+  `login_ip` varchar(45) NOT NULL,
+  `login_device` varchar(45) NOT NULL,
+  `expire` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `chat_fk_idx` (`user_id` ASC),
-  CONSTRAINT `chat_fk`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `User` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  KEY `user_login_fk_idx` (`user_id_cur`),
+  CONSTRAINT `user_login_fk` FOREIGN KEY (`user_id_cur`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `Authorized_URL` ;
 
-CREATE TABLE IF NOT EXISTS `Authorized_URL` (
-  `id` INT ZEROFILL UNSIGNED NOT NULL AUTO_INCREMENT,
-  `url_pattern` VARCHAR(45) NULL,
-  `user_id` INT ZEROFILL UNSIGNED NULL,
-  PRIMARY KEY (`id`),
-  INDEX `auth_url_fk_idx` (`user_id` ASC),
-  CONSTRAINT `auth_url_fk`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `User` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 

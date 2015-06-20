@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<title>Friends Search</title>
+    <meta charset="UTF-8">
+ 	<script type="text/javascript" src="public/js/lib/jquery-2.1.4.js"></script>
+ 	
+    <style type="text/css">
+    	.error {
+    		color: red;
+    	}
+    </style>
+</head>
+<body>
+	<section id = "Search">
+	<form method = "POST" action = "searchFriends.php">
+		<div>
+			<input type="text" name="kw" size="35" value="{KEYWORD}"></input>
+			<select name="sc">
+				<option value="Search by User's Name" {SELECTED1}>Search by User's Name</option>
+				<option value="Search by User's Email" {SELECTED2}>Search by User's Email</option>
+				<option value="Search by User's Cellphone" {SELECTED3}>Search by User's Cellphone</option>
+				<option value="Search by User's Address" {SELECTED4}>Search by User's Address</option>
+			</select>
+			<button type="submit" name="submit"> Search</button>
+		</div>
+		<div class="error">{ERRORMESSAGE}</div>
+	</form>
+	<hr/>
+	<h1>result!</h1>
+	<hr/>
+	<div>
+		{RESULT}
+	</div>
+	</section>
+</body>
+</html>
