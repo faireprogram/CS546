@@ -37,15 +37,15 @@ function search() {
 				$template->assign("ERRORMESSAGE", "Query Failed");
 			} else {
 				if (isset ( $res )) {
-					$person_infos = array ();
 					while ( $row = mysqli_fetch_assoc ( $res ) ) {
 						$template->assign("ID", $row ["user_id"]);
 						$template->assign("USERNAME", $row ["user_name"]);
 						$template->assign("EMAIL", $row ["user_email"]);
 						$template->assign("CELL", $row ["user_cellphone"]);
 						$template->assign("ADDRESS", $row ["user_address"]);
-// 						$template->parse
+						$template->parse("TR", ".tr");
 					}
+					$template->parse("RESULT", "table");
 				}
 			}
 		}
@@ -53,22 +53,18 @@ function search() {
 			$sql = "select * from user where user_email like '%$kw%'";
 			$res = mysqli_query ( $dbc, $sql );
 			if (! $res) {
-				echo "Query Failed";
+				$template->assign("ERRORMESSAGE", "Query Failed");
 			} else {
 				if (isset ( $res )) {
-					$person_infos = array ();
 					while ( $row = mysqli_fetch_assoc ( $res ) ) {
-						$person_info ["uname"] = $row ["user_name"];
-						$person_info ["uemail"] = $row ["user_email"];
-						$person_info ["ucell"] = $row ["user_cellphone"];
-						$person_info ["uaddr"] = $row ["user_address"];
-						array_push ( $person_infos, $person_info );
+						$template->assign("ID", $row ["user_id"]);
+						$template->assign("USERNAME", $row ["user_name"]);
+						$template->assign("EMAIL", $row ["user_email"]);
+						$template->assign("CELL", $row ["user_cellphone"]);
+						$template->assign("ADDRESS", $row ["user_address"]);
+						$template->parse("TR", ".tr");
 					}
-					foreach ( $person_infos as $ele ) {
-						$uname = $ele["uname"]; $uemail = $ele["uemail"]; $ucell = $ele["ucell"]; $uaddr = $ele["uaddr"];
-						echo "<tr><td>$uname</td><td>$uemail</td><td>$ucell</td>".
-								"<td>$uaddr</td>"."<td><a href = \"#\"><input type = \"submit\" value = \"Add Friend\"></input></a></td></tr>";
-					}
+					$template->parse("RESULT", "table");
 				}
 			}
 		}
@@ -76,22 +72,18 @@ function search() {
 			$sql = "select * from user where user_cellphone like '%$kw%'";
 			$res = mysqli_query ( $dbc, $sql );
 			if (! $res) {
-				echo "Query Failed";
+				$template->assign("ERRORMESSAGE", "Query Failed");
 			} else {
 				if (isset ( $res )) {
-					$person_infos = array ();
 					while ( $row = mysqli_fetch_assoc ( $res ) ) {
-						$person_info ["uname"] = $row ["user_name"];
-						$person_info ["uemail"] = $row ["user_email"];
-						$person_info ["ucell"] = $row ["user_cellphone"];
-						$person_info ["uaddr"] = $row ["user_address"];
-						array_push ( $person_infos, $person_info );
+						$template->assign("ID", $row ["user_id"]);
+						$template->assign("USERNAME", $row ["user_name"]);
+						$template->assign("EMAIL", $row ["user_email"]);
+						$template->assign("CELL", $row ["user_cellphone"]);
+						$template->assign("ADDRESS", $row ["user_address"]);
+						$template->parse("TR", ".tr");
 					}
-					foreach ( $person_infos as $ele ) {
-						$uname = $ele["uname"]; $uemail = $ele["uemail"]; $ucell = $ele["ucell"]; $uaddr = $ele["uaddr"];
-						echo "<tr><td>$uname</td><td>$uemail</td><td>$ucell</td>".
-								"<td>$uaddr</td>"."<td><a href = \"#\"><input type = \"submit\" value = \"Add Friend\"></input></a></td></tr>";
-					}
+					$template->parse("RESULT", "table");
 				}
 			}
 		}
@@ -99,22 +91,18 @@ function search() {
 			$sql = "select * from user where user_address like '%$kw%'";
 			$res = mysqli_query ( $dbc, $sql );
 			if (! $res) {
-				echo "Query Failed";
+				$template->assign("ERRORMESSAGE", "Query Failed");
 			} else {
 				if (isset ( $res )) {
-					$person_infos = array ();
 					while ( $row = mysqli_fetch_assoc ( $res ) ) {
-						$person_info ["uname"] = $row ["user_name"];
-						$person_info ["uemail"] = $row ["user_email"];
-						$person_info ["ucell"] = $row ["user_cellphone"];
-						$person_info ["uaddr"] = $row ["user_address"];
-						array_push ( $person_infos, $person_info );
+						$template->assign("ID", $row ["user_id"]);
+						$template->assign("USERNAME", $row ["user_name"]);
+						$template->assign("EMAIL", $row ["user_email"]);
+						$template->assign("CELL", $row ["user_cellphone"]);
+						$template->assign("ADDRESS", $row ["user_address"]);
+						$template->parse("TR", ".tr");
 					}
-					foreach ( $person_infos as $ele ) {
-						$uname = $ele["uname"]; $uemail = $ele["uemail"]; $ucell = $ele["ucell"]; $uaddr = $ele["uaddr"];
-						echo "<tr><td>$uname</td><td>$uemail</td><td>$ucell</td>".
-								"<td>$uaddr</td>"."<td><a href = \"#\"><input type = \"submit\" value = \"Add Friend\"></input></a></td></tr>";
-					}
+					$template->parse("RESULT", "table");
 				}
 			}
 		}
@@ -127,6 +115,5 @@ function search() {
 		$template->parse("ERRORMESSAGE", "ol");
 	}
 }
-
 
 ?>

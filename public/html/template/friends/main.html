@@ -3,13 +3,96 @@
 <head>
 	<title>Friends Search</title>
     <meta charset="UTF-8">
- 	<script type="text/javascript" src="public/js/lib/jquery-2.1.4.js"></script>
+ 	<script type="text/javascript" src="../../public/js/lib/jquery-2.1.4.js"></script>
  	
     <style type="text/css">
     	.error {
     		color: red;
     	}
+    	
+    	td, th {
+    		padding: 5px 10px 5px 10px;
+    	}
+    	table {
+	 		text-align: left;
+		}
+		
+		.loader {
+			background-image:url("../../public/img/load.gif");
+			background-size:20%;
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+		    background-position: center;
+		/* 	background: rgba(1,1,1,.5); */
+			height: 100%;
+			left: 0;
+			position: fixed;
+			top: 0;
+			width: 100%;
+			z-index: 100;
+		}
     </style>
+    
+    <script type="text/javascript">
+    	var dc = window.opener.duckchat;
+    	function addFriend(li) {
+    		if(dc) {
+    			$(".loader").show();
+    			var tr = $(li).parents("tr");
+    			var receiverId = tr.attr("data-id");
+    			var receiverName = tr.attr("data-name");
+    			var invitorId = dc.data.attributes["id"];
+    			var invitorName = dc.data.attributes["name"];
+    			var date = new Date();
+    			var url = "../service/FriendService.php";
+    			
+    			var cmd = {
+    				type : "ADD_FRIEND",
+    				content : {
+    					"invitor" : {
+    						id : invitorId,
+    						name : invitorName
+    					},
+    					
+    					"receiver" : {
+    						id : receiverId,
+    						name : receiverName
+    					},
+    					
+    					"group" : "DefaultGroup"
+    				},
+    				time : date.getTime()
+    			}
+    			
+    			$.ajax(
+    					{
+    						url: 	 url, 
+    						type:	 "POST",
+    						data:	{cmd : cmd},
+    						success: function(result){
+    									console.log(result);
+    									if(result == 'ok') {
+    										
+    										setTimeout(function() {
+    											dc.renewFriendList();
+    											dc.info("Successful Add Friend");
+    											window.close();
+    											$(".loader").hide();
+    										}, 2000);
+    										
+    									} else {
+    										setTimeout(function() {
+    											dc.warn("Fail to Add Friend!");
+    											$(".loader").hide();
+    										}, 20000);
+    									}
+    								}
+ 					});
+        	}
+    	}
+    
+    
+    </script>
 </head>
 <body>
 	<section id = "Search">
@@ -32,6 +115,7 @@
 	<div>
 		{RESULT}
 	</div>
+	<div class="loader" style="display: none;"></div>
 	</section>
 </body>
 </html>

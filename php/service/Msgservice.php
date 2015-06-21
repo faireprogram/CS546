@@ -1,9 +1,5 @@
 <?php
 	include_once 'operation/Executor.php';
-/*
- * Initialize DB;
- */
-db();
 	
 	if(isset($_POST["cmd"]) && $_POST["cmd"] != null) {
 		$cmd = $_POST["cmd"];

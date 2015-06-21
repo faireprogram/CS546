@@ -1,9 +1,6 @@
 <?php
 
 include_once 'operation/Executor.php';
-/*
- * Initialize Global DataBase;
-*/
 
 session_start();
 

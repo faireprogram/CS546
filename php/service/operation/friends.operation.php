@@ -34,6 +34,8 @@ function addfriendcmd_excute($cmd) {
 	 * log its operation!
 	 */
 	logaction($cmd);
+	
+	echo "ok";
 }
 
 function readdfriendcmd_excute($cmd) {
@@ -46,6 +48,7 @@ function readdfriendcmd_excute($cmd) {
 	 * log its operation!
 	*/
 	logaction($cmd);
+	echo json_encode($cmd).PHP_EOL;
 }
 
 function _validate_friendcmd($cmd) {

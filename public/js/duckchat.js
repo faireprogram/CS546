@@ -798,12 +798,19 @@
 		scrollMessageWindow($("#" + compositeId));
 	}
 	
+	function _dealReAddFriend(cmd) {
+		this.renewFriendList();
+	}
+	
 	function _dealMsg(cmd) {
 		if(!cmd) {
 			return;
 		}
 		if(cmd["type"] && cmd["type"] == "RE_SEND_MSG") {
 			invoke(this, _dealReSendMsg, cmd);
+		}
+		if(cmd["type"] && cmd["type"] == "RE_ADD_FRIEND") {
+			invoke(this, _dealReAddFriend, cmd);
 		}
 	}
 	
@@ -846,6 +853,13 @@
 		$(element).parent().css("display", "none");
 		$(element).parent().next().css("display", "block");
 		invoke(this, _rewritegroups, this.data, "edit");
+	}
+	
+	var openFindFriends = function() {
+		var top = window.innerHeight/2 - 200;
+		var left = window.innerWidth/2 - 225;
+		var str = "top=" + top + ", left=" + left + ", width=450, height=400";
+		 window.open("php/chat/searchFriends.php", "FindFriend", str);
 	}
 	
 	var scrollMessageWindow = function(handler) {
@@ -1004,7 +1018,9 @@
 					type:	 "POST",
 					data:	{cmd : cmd},
 					success: function(result){
-								console.log(result);
+								if(!result) {
+									return;
+								}
 								var arrays = result.split(/\r?\n/);
 								var jsonObjs = []
 								for(var index in arrays) {
@@ -1077,6 +1093,8 @@
 			
 			showCancelConfirm: showCancelConfirm,
 			
+			openFindFriends: openFindFriends,
+			
 			message: message,
 			
 			ok: ok,
@@ -1085,7 +1103,16 @@
 			
 			confirmChanges: confirmChanges,
 			
-			cancelChanges: cancelChanges
+			cancelChanges: cancelChanges,
+			
+			warn: _setwarning_message,
+				
+			info: _setinfo_message,
+			
+			renewFriendList: function () {
+				this.retrievebackgroups();
+				invoke(this, _rewritegroups, this.data);
+			}
 	}
 	
 	global.DuckChat = DuckChat;
