@@ -5,7 +5,8 @@
 (function(global, $) {
 	
 	var DuckChat = DuckChat || function() {},
-		version = "1.0.0";
+		version = "1.0.0",
+		MAXREAD = 8;
 	
 	
 	var initiliaze = function() {
@@ -15,8 +16,11 @@
 		this.wins = [];
 		this.activewin = null;
 		
+		//HISTORY MAX READ
+		
 		this.retrievebackgroups();
 		invoke(this, _rewritegroups, this.data);
+//		this.shortpolling();
 		
 		$('body').click(function(e) {
 			if(!$(e.target).is(".selectmenu_wrapper") && $(".selectmenu_wrapper").css("display") != "none") {
@@ -62,7 +66,7 @@
 	function _getCompositeId(targetId, selfId) {
 		var targetId = targetId.toString();
 		var selfId = selfId.toString();
-		return targetId.localeCompare(selfId) ? targetId+selfId : selfId+targetId
+		return targetId.localeCompare(selfId) >= 0 ? targetId+selfId : selfId+targetId
 	}
 	function _allgroups() {
 		return $(".group:not(.create)");
@@ -383,11 +387,12 @@
 			this.nicelyMinimizeWindow();
 		} else {
 			this.nicelyShowWindow(win);
+			invoke(this, scrollMessageWindow, win.children(".chat_container"));
 		}
 	}
 	
 	function _createNewWindow(li) {
-		invoke(this, _createNewWindowByAttributes, li.data("id"), li.data("name"));
+		return invoke(this, _createNewWindowByAttributes, li.data("id"), li.data("name"));
 	}
 	
 	function _createNewWindowByAttributes(targetId, targetName) {
@@ -411,15 +416,41 @@
 		ul.append(liminus, ptext, liclose);
 		upbar.append(ul);
 		
+		var histbar = $("<div></div>").addClass("showhistory");
+		var spanHis = $("<span>show history &#9652;</span>");
+		histbar.append(spanHis);
+		
 		var chat =$("<section></section>").addClass("chat_container").attr("id", compositeId);
 		var inputbox = $("<section></section>").addClass("input_container");
-		var textArea = $("<div></div>").addClass("textarea col-3").attr("contenteditable", true).text("Input HERE!!!!!!");
+		var textArea = $("<textarea></textarea>").addClass("textarea col-3").attr("placeholder", "Input HERE!!!!!!");
 		var senddiv = $("<div></div>").addClass("sendbutton col-1");
 		var sendButton = _createchecked();
 		senddiv.append(sendButton);
 		inputbox.append(textArea, senddiv);
 		
-		diag_panel.append(upbar, chat, inputbox);
+		diag_panel.append(upbar, histbar,  chat, inputbox);
+		
+		chat.bind("scroll", {chat:chat, diag:diag_panel}, function(event){
+			var chat = event.data.chat;
+			var diag = event.data.diag;
+			var offset = diag.data("historyoffset");
+			var owner = diag.data("owner");
+			var self = diag.data("self");
+			if(chat.scrollTop() == 0) {
+				this.showHistory(offset, MAXREAD, owner, self, diag, 1);
+			}
+		}.bind(this));
+		
+		histbar.bind("click", {chat:chat, diag:diag_panel}, function(event){
+			var chat = event.data.chat;
+			var diag = event.data.diag;
+			var offset = diag.data("historyoffset");
+			var owner = diag.data("owner");
+			var self = diag.data("self");
+			if(chat.scrollTop() == 0) {
+				this.showHistory(offset, MAXREAD, owner, self, diag, 1);
+			}
+		}.bind(this));
 		
 		liminus.bind("click",{i:iminus, id:compositeId}, function(event) {
 			var i = event.data.i;
@@ -620,9 +651,23 @@
 				} else {
 					li.bind("dblclick", {li:li}, function(event) {
 						var li = event.data.li;
-						this.nicelyMinimizeWindow();
-						var win = this.makeNewWindow(li);
-						this.nicelyShowWindow(win);
+						var compositeId =  _getCompositeId(this.data["attributes"]["id"], li.data("id"));
+						var findResult = invoke(this, _findwinbyid, compositeId);
+						if(findResult && this.activewin && findResult.data("id") != this.activewin.data("id")) {
+							this.nicelyMinimizeWindow();
+							this.nicelyShowWindow(findResult);
+						}
+						if(findResult && !this.activewin) {
+							this.nicelyMinimizeWindow();
+							this.nicelyShowWindow(findResult);
+						}
+						if(!findResult) {
+							this.nicelyMinimizeWindow();
+							var win = this.makeNewWindow(li);
+							this.nicelyShowWindow(win);
+							this.showHistory(win.data("historyoffset"), MAXREAD, win.data("owner"), win.data("self"), win);
+						}
+						
 					}.bind(this));
 				}
 				li.append(li_txt);
@@ -783,6 +828,7 @@
 			}
 		} else {
 			var newwin = invoke(this, _createNewWindowByAttributes, owner["id"], owner["name"]);
+			newwin.hide();
 			var chatcontainer = $("#" + compositeId);
 			if(senderId == this.data.attributes["id"]) {
 				invoke(this, addMessagetoLeft, cmd["content"]["sender"], msg , chatcontainer);
@@ -823,7 +869,8 @@
 		return func.apply(obj, par);
 	}
 	
-	var addMessagetoLeft = function(sender, message , holder) {
+	
+	var addMessagetoLeft = function(sender, message , holder, isscroll) {
 		var article = $('<article class="messagebox clearfix"></article>');
 		//header
 		var header = $('<header class="left"></header>');
@@ -833,10 +880,14 @@
 		//message
 		var message = $('<p class="message left">' + message + '</p>');
 		article.append(header, message);
-		holder.append(article);
+		if(!isscroll) {
+			holder.append(article);
+		} else {
+			holder.prepend(article);
+		}
 	}
 	
-	var addMessagetoRight = function(sender,message, holder) {
+	var addMessagetoRight = function(sender,message, holder, isscroll) {
 		var article = $('<article class="messagebox clearfix"></article>');
 		//header
 		var header = $('<header class="right"></header>');
@@ -846,7 +897,11 @@
 		//message
 		var message = $('<p class="message right">' + message + '</p>');
 		article.append(header, message);
-		holder.append(article);
+		if(!isscroll) {
+			holder.append(article);
+		} else {
+			holder.prepend(article);
+		}
 	}
 	
 	var showCancelConfirm = function(element) {
@@ -862,8 +917,12 @@
 		 window.open("php/chat/searchFriends.php", "FindFriend", str);
 	}
 	
-	var scrollMessageWindow = function(handler) {
-		handler.animate({ scrollTop: handler[0].scrollHeight}, 1000);
+	var scrollMessageWindow = function(handler, type) {
+		if(!type) {
+			handler.animate({ scrollTop: handler[0].scrollHeight}, 1000);
+		} else {
+			handler.animate({ scrollTop: 0}, 1000);
+		}
 	}
 	
 	var nicelyCloseWindow = function(target) {
@@ -946,14 +1005,95 @@
 			
 			pollingtime: 1000, // polling time 1 seconds
 			
+			showHistory: function(start, length, sender, receiver, win, iscroll) {
+				/*
+				 * Show History Message
+				 */
+				$(".loader").show();
+				var date = new Date();
+				var compositeId =  _getCompositeId(sender["id"], receiver["id"]);
+				var url = "php/service/Service.php";
+				var dc =this;
+				var cmd = {
+				 		type : "CHAT_HISTORY",
+				 		content	: {
+				 			sender	: {
+				 				id : sender["id"],
+				 				name : sender["name"]
+				 			},
+				 			receiver : {
+				 				id : receiver["id"],
+				 				name : receiver["name"]
+				 			},
+				 			index : {
+									start : start,
+									length : length
+				 			}
+				 		},
+				 		time : date.getTime()	
+					}
+				$.ajax(
+						{
+							url: 	 url, 
+							type:	 "POST",
+							data:	 {"cmd" : cmd},
+							success: function(result){
+									if(!result) {
+										$(".loader").hide();
+										return;
+									}
+									setTimeout(function(){
+											var arrays = result.split(/\r?\n/);
+											var jsonObjs = []
+											for(var index in arrays) {
+												if(arrays[index]) {
+													jsonObjs.push(JSON.parse(arrays[index]));
+												}
+											}
+											win.data("historyoffset", start + jsonObjs.length); 
+											if(jsonObjs.length > 0) {
+												if(!iscroll) {
+													jsonObjs.reverse();
+													for(var index in jsonObjs) {
+														var obj = jsonObjs[index];
+														if(jsonObjs[index]["id"] == dc.data.attributes["id"]) {
+															invoke(dc, addMessagetoLeft, jsonObjs[index], jsonObjs[index]["msg"], $("#" + compositeId));
+														}
+														if(jsonObjs[index]["id"] != dc.data.attributes["id"]) {
+															invoke(dc, addMessagetoRight, jsonObjs[index], jsonObjs[index]["msg"], $("#" + compositeId));
+														}
+													}
+													scrollMessageWindow($("#" + compositeId));
+													
+												} else {
+													for(var index in jsonObjs) {
+														var obj = jsonObjs[index];
+														if(jsonObjs[index]["id"] == dc.data.attributes["id"]) {
+															invoke(dc, addMessagetoLeft, jsonObjs[index], jsonObjs[index]["msg"], $("#" + compositeId), 1);
+														}
+														if(jsonObjs[index]["id"] != dc.data.attributes["id"]) {
+															invoke(dc, addMessagetoRight, jsonObjs[index], jsonObjs[index]["msg"], $("#" + compositeId), 1);
+														}
+													}
+													scrollMessageWindow($("#" + compositeId), 1);
+												}
+												
+										}
+										$(".loader").hide();
+									
+									}, 1000);
+							}
+						});
+			},
+			
 			push_data_silencely: function(itm, sender, receiver) {
 				/*
 				 * Show Left Message Bar
 				 */
 				
 				var date = new Date();
-				var url = "php/service/Msgservice.php";
-				var text = $(itm).parent().parent().text() ? $(itm).parent().parent().text().trim() : "";
+				var url = "php/service/Service.php";
+				var text = $(itm).parent().prev().val() ? $.slash($(itm).parent().prev().val().trim()) : "";
 				var compositeId = _getCompositeId(sender["id"], receiver["id"]);
 				var cmd = {
 				 		type : "SEND_MSG",
@@ -1001,7 +1141,7 @@
 			
 			shortpolling: function() {
 				var date = new Date();
-				var url = "php/service/Msgservice.php";
+				var url = "php/service/Service.php";
 				var cmd = { type : "EXECUTE",
 								 content :{
 									 self : {
@@ -1057,7 +1197,7 @@
 			},
 			
 			saveChanges: function() {
-				request_url = "php/service/FriendsListsService.php";
+				request_url = "php/service/Service.php";
 				var dcc= this;
 				var friends =JSON.stringify(dcc.data);
 				$.ajax({
@@ -1134,6 +1274,32 @@
 	    		return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 	    	}
     		return S4() + S4() + S4();
+	    },
+	    slash: function addslashes(string) {
+	    	var tagsToReplace = {
+	    		    '&': '&amp;',
+	    		    '<': '&lt;',
+	    		    '>': '&gt;'
+    		};
+	    	
+	    	function replaceTag(tag) {
+	    	    return tagsToReplace[tag] || tag;
+	    	}
+
+    		var safe_tags_replace = function (str) {
+    		    return str.replace(/[&<>]/g, replaceTag);
+    		};
+    		var str = safe_tags_replace(string);
+    		return str.replace(/\r?\n/g, '<BR/>');
+//    		return str.replace(/\\/g, '\\\\').
+//	            replace(/\u0008/g, '\\b').
+//	            replace(/\t/g, '\\t').
+//	            replace(/\n/g, '\\n').
+//	            replace(/\f/g, '\\f').
+//	            replace(/\r/g, '\\r').
+//	            replace(/'/g, '\\\'').
+//	            replace(/"/g, '\\"');
+	        
 	    }
 	})();
 	

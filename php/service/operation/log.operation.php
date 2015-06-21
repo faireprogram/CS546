@@ -20,7 +20,8 @@
 	
 	function _log_sendmsg($cmd) {
 		$logmsgsent = array(
-			"sender" => $cmd["content"]["sender"]["name"],
+			"id"	=> $cmd["content"]["sender"]["id"],
+			"name" => $cmd["content"]["sender"]["name"],
 			"msg" =>  $cmd["content"]["message"],
 			"time" => $cmd["time"]
 		);
@@ -44,9 +45,9 @@
 		$row = $mysqldi->next_row();
 		$newlog = "";
 		if($row) {
-			$newlog = pc($row["log"]).$logmsgsent.PHP_EOL;
+			$newlog = $logmsgsent.PHP_EOL.pc($row["log"]);
 		} else {
-			$newlog = $logmsgsent.PHP_EOL;
+			$newlog = $logmsgsent;
 		}
 		if($row) {
 			$mysqldi->send_sql(sprintf($updateSql, $newlog ,$compositId));

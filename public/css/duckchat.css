@@ -325,8 +325,8 @@ box-shadow: 1px 2px 5px 0px rgba(153,153,153,0.67);
 }
 
 .textarea {
-    -moz-appearance: textfield-multiline;
-    -webkit-appearance: textarea;
+	display:block;
+	line-height:100px;
     margin-left: -1px;
     margin-right: -1px;
     font: medium -moz-fixed;
@@ -646,4 +646,17 @@ li {line-height:1.3em;}
 	top: 0;
 	width: 100%;
 	z-index: 100;
+}
+
+.showhistory {
+	text-align: center;
+	font-size: 10px;
+	font-weight: bold;
+	position: absolute;
+	width: 100%;
+	z-index: 1;
+}
+
+.showhistory span {
+	cursor : pointer;
 }
