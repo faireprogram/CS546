@@ -1191,7 +1191,7 @@
 										dcc.data = all_messages;
 										
 										invoke(dcc, _rewritegroups, dcc.data);
-										console.log(dcc);
+										dcc.shortpolling();
 									}
 						});
 			},

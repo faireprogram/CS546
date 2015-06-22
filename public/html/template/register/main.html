@@ -8,11 +8,31 @@
     	div {
     		color: red;
     	}
+    	
+    	.profile_wrapper {
+    		width: 100px;
+    		height: 100px;
+    		border: 1px solid black;
+    	}
     </style>
+    
+    <script type="text/javascript">
+    	function showimg(input) {
+    		var file = input.files[0];
+    		var reader = new FileReader();
+    		reader.onloadend = function () {
+    			var img = document.getElementById("preview");
+    			img.src = reader.result;
+    		  }
+    		if(file) {
+    			reader.readAsDataURL(file);
+    		}
+    	}
+    </script>
 </head>
 <body>
 	<section id = "Register">
-	<form method="POST" action="Register.php">
+	<form method="POST" action="Register.php" enctype="multipart/form-data">
 		<header>
 		<b>User please register here.</b><br>
 		</header>
@@ -72,10 +92,20 @@
 					<input type="text" id="rq3" name="rq3" size="25"  value="{Q3}"/>
 				</td>
 			</tr>
+			<tr>
+				<td><b>Profile Image</b></td>  
+				<td>
+					<input type="file" id="profileId" onchange="showimg(this);"  name="profileImage" size="25"/>
+						<div class="profile_wrapper">
+							<img  id="preview" width="100px" height="100px">
+						</div>
+				</td>
+			</tr>
 		</table>
 			<input type="hidden" name="formsubmitted" value="TRUE" />
       		<button type="submit">Register</button>
 	</form>
+
 	<div>
 		{MESSAGE}
 	</div>
