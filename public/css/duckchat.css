@@ -8,7 +8,6 @@ body {
 }
 
 html {
-	-ms-overflow-style: none;
 	overflow: hidden;
 }
 
@@ -64,7 +63,10 @@ div {
  	position: relative;
 }
 
-
+b.warning {
+	color:red;
+	font-weight: bold;
+}
 
 .group {
 	padding-top: 1px;
@@ -206,6 +208,11 @@ div {
 	color: black;
 }
 
+.user_info img {
+	width: 48px;
+	height: 48px;
+}
+
 .user_info form {
 	padding: 12px 0 0 0;
 }
@@ -217,9 +224,13 @@ div {
 } 
 .user_info span {
 	float:left;
-	padding: 0 5px 0 5px;
+	padding: 1px 5px 1px 5px;
 	font: bold 12px/30px arial;
 } 
+
+.user_info span.pro_icon{
+	padding-left: 1px;
+}
 
 .user_info button {
 	font-size: 10px;
@@ -326,7 +337,7 @@ box-shadow: 1px 2px 5px 0px rgba(153,153,153,0.67);
 
 .textarea {
 	display:block;
-	line-height:100px;
+/* 	line-height:100px; */
     margin-left: -1px;
     margin-right: -1px;
     font: medium -moz-fixed;
@@ -464,6 +475,16 @@ div.textarea:focus {
  	 background: linear-gradient(#FFFAFA, #94B9FC);
  	 margin-left: 15px;
  }
+ 
+.message span.time {
+  position: absolute;
+  width: 50%;
+  text-align: right;
+  bottom: -10px;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 10px;
+} 
  
 .message.left:after {
   content: ".";

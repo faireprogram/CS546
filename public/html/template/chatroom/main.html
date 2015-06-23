@@ -27,8 +27,9 @@
 			<div class="friendslist_wrapper wrapper">
 				<section class="userpannerl">
 					<div class="user_info">
+						<span class="pro_icon"><img alt="{USER_NAME}" src="php/chat/getImage.php?id={USER_ID}"></span> 
 						<form action="php/login/LoginOut.php" method="POST">
-								<span class="hi">Hi!</span> <span class="name">{USER_NAME}</span>
+								<span class="name">{USER_NAME}</span>
 								<button type="submit">SignOut</button>
 						</form>
 					</div>
@@ -38,11 +39,11 @@
 					</section>
 					<div class="bottom_link">
 						<p></p>
-						<ul class="clearfix">
+						<ul class="clearfix view">
 							<li onclick="javascirpt: duckchat.openFindFriends();"><i class="fa fa-user-plus"></i>add friends</li>
 							<li  onclick="javascript: duckchat.showCancelConfirm(this);"><i class="fa fa-cutlery"></i>edit groups</li>
 						</ul>
-						<ul class="clearfix" style="display: none;">
+						<ul class="clearfix edit" style="display: none;">
 							<li onclick="javascript:duckchat.confirmChanges($(this).parent());"><i class="fa fa-check"></i>confirm</li>
 							<li onclick="javascript:duckchat.cancelChanges(this);"><i class="fa fa-times"></i>cancel</li>
 						</ul>

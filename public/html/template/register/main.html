@@ -5,7 +5,7 @@
 <title>User Register</title>
     
     <style type="text/css">
-    	div {
+    	div.error {
     		color: red;
     	}
     	
@@ -17,13 +17,39 @@
     </style>
     
     <script type="text/javascript">
+    
+    	function showErrorLogs(error) {
+    		var div = document.querySelector("div.error");
+    		div.innerHTML = "";
+   			var p = document.createElement("p");
+   			p.innerHTML = error;
+   			div.appendChild(p);
+    	}
+    	
+    	function clearErrorLog() {
+    		var div = document.querySelector("div.error");
+    		var img = document.getElementById("preview");
+    		div.innerHTML = "";
+    		img.src = "";
+    	}
+    	
     	function showimg(input) {
+    		clearErrorLog();
     		var file = input.files[0];
+    		var maxsize = 2*1024*1024; // 2m
+    		if(!file || file.size > maxsize) {
+    			showErrorLogs("File Should Exist and The size should less than 2M");
+    			return;
+    		}
+    		if(!/\.(jpg|png|gif)$/gi.test(file.name)) {
+    			showErrorLogs("The profileImage should be  a Image");
+    			return;
+    		}
     		var reader = new FileReader();
     		reader.onloadend = function () {
     			var img = document.getElementById("preview");
     			img.src = reader.result;
-    		  }
+    		}
     		if(file) {
     			reader.readAsDataURL(file);
     		}
@@ -95,7 +121,7 @@
 			<tr>
 				<td><b>Profile Image</b></td>  
 				<td>
-					<input type="file" id="profileId" onchange="showimg(this);"  name="profileImage" size="25"/>
+					<input type="file" id="profileId" onchange="showimg(this);"  name="profileIcon" size="25"/>
 						<div class="profile_wrapper">
 							<img  id="preview" width="100px" height="100px">
 						</div>
@@ -106,7 +132,7 @@
       		<button type="submit">Register</button>
 	</form>
 
-	<div>
+	<div class="error">
 		{MESSAGE}
 	</div>
 	</section>

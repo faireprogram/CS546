@@ -24,15 +24,21 @@ include_once '../commons.php';
 	function _sendmsgcmd_execute($cmd) {
 		$sender = $cmd["content"]["sender"];
 		$receiver = $cmd["content"]["receiver"];
-		$newcmd = $cmd;
-		$newcmd["type"] = MSG_TYPE::RE_SEND_MSG;
-		$cmdstring = json_encode($newcmd);
-		writemailbox($receiver["id"], addslashes($cmdstring));
 		
-		/*log current send cmd*/
-		logaction($cmd);
-		
-		echo SUCCESS;
+		$findFriend = getPersonFromGroup($sender["id"], $receiver["id"]);
+		if(!empty($findFriend)) {
+			$newcmd = $cmd;
+			$newcmd["type"] = MSG_TYPE::RE_SEND_MSG;
+			$cmdstring = json_encode($newcmd);
+			writemailbox($receiver["id"], addslashes($cmdstring));
+			
+			/*log current send cmd*/
+			logaction($cmd);
+			
+			echo SUCCESS;
+		} else {
+			echo PEMISSION_ERROR::NOT_YOUR_FRIEND;
+		}
 	}
 	
    /**

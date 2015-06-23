@@ -15,6 +15,7 @@ $template->define(array(
 ));
 
 $template->assign("USER_NAME", $_SESSION["login_name"]);
+$template->assign("USER_ID", $_SESSION["login_id"]);
 $template->parse("CONTENT", "main");
 $template->FastPrint();
 

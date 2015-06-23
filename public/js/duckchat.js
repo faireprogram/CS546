@@ -232,26 +232,6 @@
 		}
 	}
 	
-	function _deleteuser(userli, data) {
-		var gp = userli.parents(".group");
-		var ul = $("ul", gp);
-		var id = userli.data("id");
-		for( var gpindex in data) {
-			var gpval = data[gpindex];
-			for(var usrindx in gpval) {
-				if(gpval[usrindx].id == id) {
-					delete gpval[usrindx];
-					break;
-				}
-			}
-		}
-		userli.remove();
-		/*
-		 * clear data
-		 */
-		_clearData(data);
-	}
-	
 	function _deletegroup(group) {
 		var li = $("li", group);
 		var group_name = $("span", this.defaultgroup).text();
@@ -371,10 +351,15 @@
 	}
 	
 	function _destroywin(win) {
+		if(!win.length) {
+			return;
+		}
 		if(win) {
 			win.hide();
 		}
-		this.activewin = null;
+		if(this.activewin && this.activewin.data("id") == win.data("id")) {
+			this.activewin = null;
+		}
 		var bottomwin = win.data("bottomwin")["entity"];
 		win.remove();
 		bottomwin.remove();
@@ -473,7 +458,8 @@
 		// ---------------- create bottom win
 		var bottomwinId = $.uid();
 		var bottomwin = $("<article></article>").attr("id", bottomwinId);
-		var img = $("<img></img>").attr("src", '../resource/img/avatar.jpg');
+		var url = "php/chat/getImage.php?id=" + targetId;
+		var img = $("<img></img>").attr("src", url);
 		bottomwin.append(img);
 		
 		
@@ -622,11 +608,16 @@
 					li_delete_icon.bind("click", {current_li:li, data:this.data }, function(event) {
 						var li = event.data.current_li;
 						var ds = event.data.data;
+						var compositeId = _getCompositeId(this.data["attributes"]["id"], li.data("id"));
 						that;
 						var succFunc = function() {
-							_deleteuser(li, ds);
+							this.deleteUser(li.data("id"), li.data("name"));
+							var win = $('#' + compositeId).parent();
+							if(win.length) {
+								this.nicelyCloseWindow(win);
+							}
 						}
-						this.message("Are you sure to delete user '" + li.data("name") + "'!", succFunc);
+						this.message("Are you sure to <b class=\"warning\">PERMNANENENTY</b> delete user '" + li.data("name") + "'!", succFunc);
 					}.bind(this));
 					
 					li_move_icon.bind("click", {icon:li_move_icon, user_li:li } ,function(event) {
@@ -696,6 +687,13 @@
 			
 			if(mode == "edit" && group_edit) {
 				invoke(this, _bindEventToGroupIcon, gp_modify_icon, gp_checked_icon, gp_delete_icon, grp_txt, grp_article, index);
+			}
+			if(mode && mode == "edit") {
+				$("ul.view").hide();
+				$("ul.edit").show();
+			} else {
+				$("ul.edit").hide();
+				$("ul.view").show();
 			}
 		}
 		/*
@@ -816,9 +814,9 @@
 		if(win) {
 			var chatcontainer = $("#" + compositeId);
 			if(senderId == this.data.attributes["id"]) {
-				invoke(this, addMessagetoLeft, cmd["content"]["sender"], msg , chatcontainer);
+				invoke(this, addMessagetoLeft, cmd["content"]["sender"], cmd["time"], msg , chatcontainer);
 			} else {
-				invoke(this, addMessagetoRight, cmd["content"]["sender"], msg , chatcontainer);
+				invoke(this, addMessagetoRight, cmd["content"]["sender"], cmd["time"], msg , chatcontainer);
 			}
 			if(this.activewin && this.activewin.data("id") != compositeId) {
 				// add toolbar notification
@@ -831,9 +829,9 @@
 			newwin.hide();
 			var chatcontainer = $("#" + compositeId);
 			if(senderId == this.data.attributes["id"]) {
-				invoke(this, addMessagetoLeft, cmd["content"]["sender"], msg , chatcontainer);
+				invoke(this, addMessagetoLeft, cmd["content"]["sender"], cmd["time"], msg , chatcontainer);
 			} else {
-				invoke(this, addMessagetoRight, cmd["content"]["sender"], msg , chatcontainer);
+				invoke(this, addMessagetoRight, cmd["content"]["sender"], cmd["time"], msg , chatcontainer);
 			}
 			if(this.activewin) {
 				newwin.data("bottomwin")["entity"].addClass("newmessage");
@@ -848,6 +846,15 @@
 		this.renewFriendList();
 	}
 	
+	function _dealReDelFriend(cmd) {
+		var compositeId =  _getCompositeId(cmd["content"]["deletor"]["id"], cmd["content"]["delete"]["id"]);
+		var win = $('#' + compositeId).parent();
+		if(win.length) {
+			this.nicelyCloseWindow(win);
+		}
+		this.renewFriendList();
+	}
+	
 	function _dealMsg(cmd) {
 		if(!cmd) {
 			return;
@@ -857,6 +864,9 @@
 		}
 		if(cmd["type"] && cmd["type"] == "RE_ADD_FRIEND") {
 			invoke(this, _dealReAddFriend, cmd);
+		}
+		if(cmd["type"] && cmd["type"] == "RE_DELETE_FRIEND") {
+			invoke(this, _dealReDelFriend, cmd);
 		}
 	}
 	
@@ -870,15 +880,18 @@
 	}
 	
 	
-	var addMessagetoLeft = function(sender, message , holder, isscroll) {
+	var addMessagetoLeft = function(sender, time, message , holder, isscroll) {
 		var article = $('<article class="messagebox clearfix"></article>');
 		//header
 		var header = $('<header class="left"></header>');
-		var profile_icon = $('<img class="profile_icon left " src="public/img/avatar.jpg"/>');
+		var url = "php/chat/getImage.php?id=" + sender.id;
+		var profile_icon = $('<img class="profile_icon left " src=\"'+ url +'\"/>');
 		var profile_name = $('<p class="profile_name">' + sender.name +'</p>');
 		header.append(profile_icon, profile_name);
 		//message
 		var message = $('<p class="message left">' + message + '</p>');
+		var time = $("<span></span>").addClass("time").text($.date(time));
+		message.prepend(time);
 		article.append(header, message);
 		if(!isscroll) {
 			holder.append(article);
@@ -887,15 +900,18 @@
 		}
 	}
 	
-	var addMessagetoRight = function(sender,message, holder, isscroll) {
+	var addMessagetoRight = function(sender, time, message, holder, isscroll) {
 		var article = $('<article class="messagebox clearfix"></article>');
 		//header
 		var header = $('<header class="right"></header>');
-		var profile_icon = $('<img class="profile_icon right " src="public/img/avatar.jpg"/>');
+		var url = "php/chat/getImage.php?id=" + sender.id;
+		var profile_icon = $('<img class="profile_icon right " src=\"'+ url +'\"/>');
 		var profile_name = $('<p class="profile_name right"></p>').text(sender.name);
 		header.append(profile_icon, profile_name);
 		//message
 		var message = $('<p class="message right">' + message + '</p>');
+		var time = $("<span></span>").addClass("time").text($.date(time));
+		message.prepend(time);
 		article.append(header, message);
 		if(!isscroll) {
 			holder.append(article);
@@ -953,7 +969,8 @@
 		if(failCallback) {
 			this.cancelCallback = failCallback;
 		}
-		$("p", messagebox).text(msg);
+		$("p", messagebox).text("");
+		$("p", messagebox).append($.parseHTML(msg));
 		messagebox.css("display", "block");
 	}
 	
@@ -976,7 +993,8 @@
 	var cancelChanges = function(ul) {
 		$(ul).parent().css("display", "none");
 		$(ul).parent().prev().css("display", "block");
-		invoke(this, _rewritegroups, this.data);
+		this.renewFriendList();
+//		invoke(this, _rewritegroups, this.data);
 	}
 	
 	var confirmChanges = function(ul) {
@@ -1057,10 +1075,10 @@
 													for(var index in jsonObjs) {
 														var obj = jsonObjs[index];
 														if(jsonObjs[index]["id"] == dc.data.attributes["id"]) {
-															invoke(dc, addMessagetoLeft, jsonObjs[index], jsonObjs[index]["msg"], $("#" + compositeId));
+															invoke(dc, addMessagetoLeft, jsonObjs[index], jsonObjs[index]["time"], jsonObjs[index]["msg"], $("#" + compositeId));
 														}
 														if(jsonObjs[index]["id"] != dc.data.attributes["id"]) {
-															invoke(dc, addMessagetoRight, jsonObjs[index], jsonObjs[index]["msg"], $("#" + compositeId));
+															invoke(dc, addMessagetoRight, jsonObjs[index], jsonObjs[index]["time"], jsonObjs[index]["msg"], $("#" + compositeId));
 														}
 													}
 													scrollMessageWindow($("#" + compositeId));
@@ -1069,10 +1087,10 @@
 													for(var index in jsonObjs) {
 														var obj = jsonObjs[index];
 														if(jsonObjs[index]["id"] == dc.data.attributes["id"]) {
-															invoke(dc, addMessagetoLeft, jsonObjs[index], jsonObjs[index]["msg"], $("#" + compositeId), 1);
+															invoke(dc, addMessagetoLeft, jsonObjs[index], jsonObjs[index]["time"], jsonObjs[index]["msg"], $("#" + compositeId), 1);
 														}
 														if(jsonObjs[index]["id"] != dc.data.attributes["id"]) {
-															invoke(dc, addMessagetoRight, jsonObjs[index], jsonObjs[index]["msg"], $("#" + compositeId), 1);
+															invoke(dc, addMessagetoRight, jsonObjs[index], jsonObjs[index]["time"], jsonObjs[index]["msg"], $("#" + compositeId), 1);
 														}
 													}
 													scrollMessageWindow($("#" + compositeId), 1);
@@ -1095,6 +1113,7 @@
 				var url = "php/service/Service.php";
 				var text = $(itm).parent().prev().val() ? $.slash($(itm).parent().prev().val().trim()) : "";
 				var compositeId = _getCompositeId(sender["id"], receiver["id"]);
+				var time = date.getTime();
 				var cmd = {
 				 		type : "SEND_MSG",
 				 		content	: {
@@ -1109,7 +1128,7 @@
 				 			message : text
 				 // 				"message" : "This is a TEST!!"
 				 		},
-				 		time : date.getTime()	
+				 		time :time	
 					}
 				$.ajax(
 						{
@@ -1120,9 +1139,14 @@
 								
 								if(result.trim() == "ok") {
 									var setTimeoutid = setTimeout(function(){
-										  addMessagetoLeft(sender, text ,$("#" + compositeId));
+										  addMessagetoLeft(sender, time, text ,$("#" + compositeId));
 										  scrollMessageWindow($("#" + compositeId));
 										$(".loader").css("display", "none");
+									}, 1500);
+								} else if(result.trim() == "NOT_YOUR_FRIEND"){
+									var setTimeoutid = setTimeout(function(){
+										$(".loader").css("display", "none");
+										_setwarning_message("You Are not allowed to Speak someone is not your friend");
 									}, 1500);
 								} else {
 									var setTimeoutid = setTimeout(function(){
@@ -1135,9 +1159,50 @@
 						});
 			},
 			
-			pushDataToScreen: function() {
-			   scrollMessageWindow($("#chat").parent());
-			},
+			deleteUser: function(deleteId, deleteName) {
+				$(".loader").css("display", "block");
+				var date = new Date();
+				var url = "php/service/Service.php";
+				var time = date.getTime();
+				var cmd = {
+				 		type : "DELETE_FRIEND",
+				 		content	: {
+				 			deletor	: {
+				 				id : this.data.attributes.id,
+				 				name : this.data.attributes.name
+				 			},
+				 			"delete" : {
+				 				id : deleteId,
+				 				name : deleteName
+				 			}
+				 		},
+				 		time :time	
+					}
+				var dc = this;
+				$.ajax(
+						{
+							url: 	 url, 
+							type:	 "POST",
+							data:	 {"cmd" : cmd},
+							success: function(result){
+								
+								if(result.trim() == "ok") {
+									var setTimeoutid = setTimeout(function(){
+										_setinfo_message("Success Delete User " + deleteName);
+										$(".loader").css("display", "none");
+										dc.renewFriendList();
+									}, 2000);
+								} else {
+									var setTimeoutid = setTimeout(function(){
+										$(".loader").css("display", "none");
+										_setwarning_message("Failed To send Message!!");
+									}, 20000);
+								}
+								
+							}
+						});
+			}
+			,
 			
 			shortpolling: function() {
 				var date = new Date();
@@ -1197,6 +1262,7 @@
 			},
 			
 			saveChanges: function() {
+				$(".loader").show();
 				request_url = "php/service/Service.php";
 				var dcc= this;
 				var friends =JSON.stringify(dcc.data);
@@ -1205,10 +1271,19 @@
 							type:	 "POST",
 							data:	{action:"save", id:"1", friends: friends},
 							success: function(result){
+								console.log(result);
 								if(result == "ok") {
-									_setinfo_message("Successefull save");
+									var setTimeoutid = setTimeout(function(){
+										_setinfo_message("Successefull save");
+										$(".loader").css("display", "none");
+										dc.renewFriendList();
+									}, 2000);
 								} else {
-									_setwarning_message("Some Error happens here!!");
+									var setTimeoutid = setTimeout(function(){
+										_setwarning_message("Some Error happens here!!");
+										$(".loader").css("display", "none");
+										dc.renewFriendList();
+									}, 2000);
 								}
 							}
 						});
@@ -1275,7 +1350,7 @@
 	    	}
     		return S4() + S4() + S4();
 	    },
-	    slash: function addslashes(string) {
+	    slash: function (string) {
 	    	var tagsToReplace = {
 	    		    '&': '&amp;',
 	    		    '<': '&lt;',
@@ -1291,15 +1366,18 @@
     		};
     		var str = safe_tags_replace(string);
     		return str.replace(/\r?\n/g, '<BR/>');
-//    		return str.replace(/\\/g, '\\\\').
-//	            replace(/\u0008/g, '\\b').
-//	            replace(/\t/g, '\\t').
-//	            replace(/\n/g, '\\n').
-//	            replace(/\f/g, '\\f').
-//	            replace(/\r/g, '\\r').
-//	            replace(/'/g, '\\\'').
-//	            replace(/"/g, '\\"');
-	        
+	    },
+	    date: function (timestamp) {
+			 var a = new Date(parseInt(timestamp));
+			 var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+			 var year = a.getFullYear();
+			 var month = months[a.getMonth()];
+			 var date = a.getDate();
+			 var hour = a.getHours() < 10 ? "0" + a.getHours() : a.getHours();
+			 var min = a.getMinutes()< 10 ? "0" + a.getMinutes(): a.getMinutes();
+			 var sec = a.getSeconds()< 10 ? "0" + a.getSeconds() : a.getSeconds();
+			 var time = month + "/" + date + "/" + year + " " + hour + ':' + min + ':' + sec;
+			 return time;
 	    }
 	})();
 	

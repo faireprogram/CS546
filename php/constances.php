@@ -23,11 +23,9 @@ define('EMAIL', 'email@gmail.com');
 DEFINE('WEBSITE_URL', 'http://localhost');
 
 // ----------------------   Enum ------------------------------------
-abstract class FILE_OP_STATE {
-	 const SUCCESS = 1;
-	 const LOCKED = 2; // locked by others
-	 const NOEXIST = 3; // non exist
-	 const OTHER = 4; // other problems
+abstract class PEMISSION_ERROR {
+	 const NOT_YOUR_FRIEND = "NOT_YOUR_FRIEND";
+	 const NOT_YOUR_RESOURCE = "NOT_YOUR_RESOURCE"; // locked by others
 }
 
 

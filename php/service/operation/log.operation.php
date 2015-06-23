@@ -18,6 +18,21 @@
 // 		}
 	}
 	
+	function clearlog($cmd) {
+		if($cmd["type"] == MSG_TYPE::DELETE_FRIEND) {
+			_clearHistoryMessage($cmd);
+		}
+	}
+	
+	function _clearHistoryMessage($cmd) {
+		global $mysqldi;
+		$deletorId = $cmd["content"]["deletor"]["id"];
+		$deleteId = $cmd["content"]["delete"]["id"];
+		$compositId = getABuserID($deletorId, $deleteId);
+		$deleteSql = "delete from message where `abuser` = '%s'";
+		$mysqldi->send_sql(sprintf($deleteSql, $compositId));
+	}
+	
 	function _log_sendmsg($cmd) {
 		$logmsgsent = array(
 			"id"	=> $cmd["content"]["sender"]["id"],

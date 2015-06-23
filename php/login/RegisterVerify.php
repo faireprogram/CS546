@@ -84,6 +84,23 @@ function verifyandinsert() {
 		if($gender == "femaile") {
 			$template->assign("CHECKED2", "checked");
 		}
+	} 
+	if(!isset($_FILES['profileIcon']) && !is_array($_FILES['profileIcon'])) {
+		$error [] = 'Please Select your profile image';
+	} else {
+		$fileName = $_FILES["profileIcon"]["name"];
+		$fileTmpLoc =  $_FILES["profileIcon"]["tmp_name"];
+		$fileErrorMsg = $_FILES["profileIcon"]["error"];
+		$segmentOfName = explode(".", $fileName);
+		$fileExt = end($segmentOfName);
+		if ($fileErrorMsg == 1) {
+			$error [] = "Unknown Error happens when upload profile image!";
+		}
+		$profileImg = rand(100000000000,999999999999).".".$fileExt;
+		$moveResult = move_uploaded_file($fileTmpLoc, "../data/img/$profileImg");
+		if($moveResult === false) {
+			$error [] = "Unknown Error happens when upload profile image!";
+		}
 	}
 	
 	if (empty ( $error )) // send to Database if there's no error '
@@ -99,10 +116,10 @@ function verifyandinsert() {
 			// Create a unique activation code:
 			$activation = md5 ( uniqid ( rand (), true ) );
 			
-			$query_insert_user = "INSERT INTO user ( `user_name`, `user_email`, `user_cellphone`, `user_pwd` , `user_address`, `user_age`, `user_gender`, `retrieve_q1`, `retrieve_q2`, `retrieve_q3`)".
-			"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+			$query_insert_user = "INSERT INTO user ( `user_name`, `user_email`, `user_cellphone`, `user_pwd` , `user_address`, `user_age`, `user_gender`, `retrieve_q1`, `retrieve_q2`, `retrieve_q3`, `image`)".
+			"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
 			
-			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, $Password, $addr,$age, $gender, $rq1, $rq2, $rq3) );
+			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, $Password, $addr,$age, $gender, $rq1, $rq2, $rq3, pc($profileImg)) );
 			if (! $result_insert_user) {
 				$template->assign("MESSAGE", 'Query Failed ') ;
 				$template->parse("CONTENT", "main");

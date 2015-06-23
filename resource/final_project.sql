@@ -24,10 +24,10 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `notifications` (
+CREATE TABLE `operation` (
   `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned zerofill NOT NULL,
-  `notifications` longtext,
+  `operations` longtext,
   PRIMARY KEY (`id`),
   KEY `index_user_id` (`user_id`),
   CONSTRAINT `no_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION

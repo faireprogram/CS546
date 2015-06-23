@@ -13,8 +13,17 @@ function friendcmd_excutor($cmd) {
 	if($cmd["type"] == MSG_TYPE::RE_ADD_FRIEND) {
 		readdfriendcmd_excute($cmd);
 	}
-	
+	if($cmd["type"] == MSG_TYPE::DELETE_FRIEND) {
+		delfriendcmd_excute($cmd);
+	}
+	if($cmd["type"] == MSG_TYPE::RE_DELETE_FRIEND) {
+		redelfriendcmd_excute($cmd);
+	}
 }
+
+/*
+ * add friend implementation
+ */
 
 function addfriendcmd_excute($cmd) {
 	$invitor = $cmd["content"]["invitor"]["id"];
@@ -28,14 +37,14 @@ function addfriendcmd_excute($cmd) {
 	$newcmd = $cmd;
 	$newcmd["type"] = MSG_TYPE::RE_ADD_FRIEND;
 	$newcmd["content"]["group"] = UNKNOWN_GROUPNAME;
-	writemailbox($receiver, addslashes(json_encode($newcmd)));
+	writemailbox($receiver, pc(json_encode($newcmd)));
 	
 	/*
 	 * log its operation!
 	 */
 	logaction($cmd);
 	
-	echo "ok";
+	echo SUCCESS;
 }
 
 function readdfriendcmd_excute($cmd) {
@@ -50,6 +59,53 @@ function readdfriendcmd_excute($cmd) {
 	logaction($cmd);
 	echo json_encode($cmd).PHP_EOL;
 }
+
+/*
+ * delete friend implementation 
+ */
+
+function delfriendcmd_excute($cmd) {
+	$deletor = $cmd["content"]["deletor"]["id"];
+	$delete = $cmd["content"]["delete"]["id"];
+	deleteFriendFromDb($deletor, $delete);
+	
+	/*
+	 * force to re-del command
+	*/
+	$newcmd = $cmd;
+	$newcmd["type"] = MSG_TYPE::RE_DELETE_FRIEND;
+	writemailbox($delete, pc(json_encode($newcmd)));
+	
+	/*
+	 * Clear History log
+	 */
+	clearlog($cmd);
+	
+	/*
+	 * log its operation!
+	*/
+	logaction($cmd);
+	
+	echo SUCCESS;
+}
+
+function redelfriendcmd_excute($cmd) {
+	$deletor = $cmd["content"]["deletor"]["id"];
+	$delete = $cmd["content"]["delete"]["id"];
+	deleteFriendFromDb($delete, $deletor);
+	
+	/*
+	 * log its operation!
+	*/
+	logaction($cmd);
+	echo json_encode($cmd).PHP_EOL;
+	
+}
+
+/*
+ * ------------------------ Friends Cmd Validation -----------------------------------------------------------------
+*/
+
 
 function _validate_friendcmd($cmd) {
 	if($cmd["type"] == MSG_TYPE::ADD_FRIEND || $cmd["type"] == MSG_TYPE::RE_ADD_FRIEND) {
@@ -76,7 +132,7 @@ function _validate_friendcmd($cmd) {
 		}
 		return true;
 	} else if($cmd["type"] == MSG_TYPE::DELETE_FRIEND || $cmd["type"] == MSG_TYPE::RE_DELETE_FRIEND) {
-		if(!isset($cmd["content"]["deletor"]) || is_array($cmd["content"]["deletor"])) {
+		if(!isset($cmd["content"]["deletor"]) || !is_array($cmd["content"]["deletor"])) {
 			return false;
 		}
 		if(!isset($cmd["content"]["deletor"]["id"])) {
@@ -85,7 +141,7 @@ function _validate_friendcmd($cmd) {
 		if(!isset($cmd["content"]["deletor"]["name"])) {
 			return false;
 		}
-		if(!isset($cmd["content"]["delete"]) || is_array($cmd["content"]["delete"])) {
+		if(!isset($cmd["content"]["delete"]) || !is_array($cmd["content"]["delete"])) {
 			return false;
 		}
 		if(!isset($cmd["content"]["delete"]["id"])) {
@@ -169,26 +225,6 @@ function retrieveJSON($personId) {
  * ----------------------         DB    ----------------------------------------
  */
 
-/**
- * @function:  getPersonById 
- */
-function getPersonById($personId) {
-	global $mysqldi;
-	$personId = addslashes($personId);
-	$sql = "select * from user where user_id = '%d'";
-	$mysqldi->send_sql(sprintf($sql, $personId));
-	$result = $mysqldi->next_row();
-	if(!empty($result)) {
-		$person = array(
-				"id" => $result["user_id"] , 
-				"name" => $result["user_name"]
-		);
-		return $person;
-	} else {
-		return null;
-	}
-}
-
 function getGroupsExposed($personId) {
 	$groups = getGroups($personId);
 	if($groups) {
@@ -198,49 +234,28 @@ function getGroupsExposed($personId) {
 	}
 }
 
-function getGroups($personId) {
-	global $mysqldi;
-	$personId = addslashes($personId);
-	$sql = "select * from user where user_id = '%d';";
-	$mysqldi->send_sql(sprintf($sql, $personId));
-	$result = $mysqldi->next_row();
-	if($result) {
-		$groups = retrieveChatGroups($result["friends"]);
-		return $groups;
-	}
-}
 
-function getPersonInfo($personId) {
-	global $mysqldi;
-	$personId = addslashes($personId);
-	$sql = "select * from user where user_id = '%d';";
-	$mysqldi->send_sql(sprintf($sql, $personId));
-	$result = $mysqldi->next_row();
-	return $result;
-}
-
-function getGroupByNameArr($groups, $grpname) {
-	return $groups[$grpname];
-}
-
-
-function getGroupByNameId($personId, $grpname) {
-	global $mysqldi;
-	$personId = addslashes($personId);
-	$sql = "select * from user where user_id = '%d';";
-	$mysqldi->send_sql(sprintf($sql, $personId));
-	$result = $mysqldi->next_row();
-	if($result) {
-		$groups = retrieveChatGroups($result["friends"]);
-		foreach($groups as $gpindex => $gpvalue) {
-			if($gpindex == $grpname) {
-				return $gpvalue;
+function removePersonFromGroup($selfId, $personId) {
+	$groups = getGroups($selfId);
+	foreach($groups as $group => $chatpersons) {
+		if($group == "attributes") {
+			continue;
+		}
+		$find = false;
+		foreach ($chatpersons as $chatPersonId => $chatPerson) {
+			if($personId === $chatPersonId) {
+				$find = true;
+				break;
 			}
 		}
-	} else {
-		return null;
+		if($find) {
+			unset($groups[$group][$personId]);
+			break;
+		}
 	}
+	return $groups;
 }
+
 
 function _invite_init_add(&$groups, $chatPerson, $self) {
 	$groups[DEFAULT_GROUPNAME] = array(
@@ -293,8 +308,8 @@ function add_to_unknown($person, &$groups) {
 
 function addFriendToDB($selfId, $personId, $grp, $mode = ADD_STATE::INVITE) {
 	global $mysqldi;
-	$personId = addslashes($personId);
-	$selfId = addslashes($selfId);
+	$personId = pc($personId);
+	$selfId = pc($selfId);
 	$chatPerson = getPersonById($personId);
 	$self = getPersonById($selfId);
 	$groups = getGroups($selfId);
@@ -328,7 +343,14 @@ function addFriendToDB($selfId, $personId, $grp, $mode = ADD_STATE::INVITE) {
 		}
 
 	}
-	
+}
+
+
+function deleteFriendFromDb($selfId, $personId) {
+	$selfId = pc($selfId);
+	$personId = pc($personId);
+	$deletedGroup = removePersonFromGroup($selfId, $personId);
+	saveChangesExposed($selfId, pc(json_encode($deletedGroup)));
 }
 
 function saveChangesExposed($id, $friends) {

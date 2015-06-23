@@ -46,11 +46,11 @@
 		}
 		
 		if($type == MSG_TYPE::DELETE_FRIEND) {
-			deletefriend_excutor($cmd);
+			friendcmd_excutor($cmd);
 		}
 		
 		if($type == MSG_TYPE::RE_DELETE_FRIEND) {
-			redeletefriend_excutor($cmd);
+			friendcmd_excutor($cmd);
 		}
 		if($type == MSG_TYPE::CHAT_HISTORY) {
 			chathistorycmd_execute($cmd);
