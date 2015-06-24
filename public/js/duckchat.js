@@ -11,6 +11,7 @@
 	
 	var initiliaze = function() {
 //		this.data = data;  // all data put here!!
+		$(".loader").show();
 		this.defaultgroup = null; //default group!!
 		this.unknowngroup = null; //unknown friends!!
 		this.wins = [];
@@ -1356,6 +1357,7 @@
 										
 										invoke(dcc, _rewritegroups, dcc.data);
 										dcc.shortpolling();
+										$(".loader").hide();
 									}
 						});
 			},

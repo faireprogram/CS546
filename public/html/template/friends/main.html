@@ -34,7 +34,7 @@
     </style>
     
     <script type="text/javascript">
-		if(!window.opener) {
+		if(!window.opener || !window.opener.duckchat) {
 			window.location.replace("/cs546/php/login/login.php");
 		}
     	var dc = window.opener.duckchat;

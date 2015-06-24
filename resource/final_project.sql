@@ -57,11 +57,13 @@ CREATE TABLE `user_login` (
   `user_id_cur` int(10) unsigned zerofill NOT NULL,
   `login_ip` varchar(45) NOT NULL,
   `login_device` varchar(45) NOT NULL,
-  `expire` datetime NOT NULL,
+  `token` varchar(20) NOT NULL,
+  `scope` text,
+  `login_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_login_fk_idx` (`user_id_cur`),
   CONSTRAINT `user_login_fk` FOREIGN KEY (`user_id_cur`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 
 
