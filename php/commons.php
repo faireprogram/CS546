@@ -17,6 +17,6 @@ include_once  dirname(__FILE__).'/utils/CmdHelper.php';
  */
 //make sure data/img exist
 if(!file_exists("../data/img exist")) {
-	mkdir("../data/img exist", 0777, true);
+	mkdir("../data/img/exist", 0777, true);
 }
 
