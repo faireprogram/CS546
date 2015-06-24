@@ -2,19 +2,13 @@
 
 include_once 'operation/Executor.php';
 
-session_start();
 
-if (!isset($_SESSION["login_id"]) || empty($_SESSION["login_id"])) {
-	header('Location: ../login/Login.php');
-}
-
-$id = $_SESSION["login_id"];
 
 if(isset($_POST["action"])) {
 	if($_POST["action"] == "read") {
 		
-		if(isset($id) && !empty($id)) {
-			$result = getGroupsExposed(pc($id));
+		if(isset($ID) && !empty($ID)) {
+			$result = getGroupsExposed(pc($ID));
 			echo json_encode($result);
 		}
 
@@ -27,6 +21,13 @@ if(isset($_POST["action"])) {
  				echo "ok";
  			}
 			
+		}
+	}
+	
+	if($_POST["action"] == "operation") {
+	
+		if(isset($_POST["id"]) && !empty($_POST["id"])) {
+							
 		}
 	}
 }

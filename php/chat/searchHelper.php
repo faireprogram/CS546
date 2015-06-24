@@ -1,5 +1,4 @@
 <?php
-include_once "../commons.php";
 
 function search() {
 	global $template;

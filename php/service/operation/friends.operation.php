@@ -1,6 +1,6 @@
 <?php
 
-include_once '../commons.php';
+include_once '../security.php';
 
 
 function friendcmd_excutor($cmd) {
@@ -160,28 +160,8 @@ function _validate_friendcmd($cmd) {
  * ------------------------ Friends Operation -----------------------------------------------------------------
  */
 
-$personimage = "Unimplemented!";
-function  addFriendToGroup($person, $group) {
-	if(!isset($this->$group) && !is_array($group)) {
-		return;
-	}
-	array_push($group, $person);
-}
 
-function  deleteFriend($person, $group_name) {
-	if(!isset($this->$group_name)) {
-		$group_name = array();
-	}
-	if(empty($groups[$group_name])) {
-		$groups[$group_name] = array();
-	} else {
-		foreach ($groups[$group_name] as $index => $truePerson) {
-			if($truePerson == $person) {
-				unset($groups[$group_name][$index]);
-			}
-		}
-	}
-}
+
 /*
  * ----------------------   Change From Class Style to Object Style    ----------------------------------------
 */

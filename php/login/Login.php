@@ -1,7 +1,12 @@
 <?php 
-include '../commons.php';
 
+include_once '../commons.php';
+		
 include 'LoginVerify.php';
+
+function v4() {
+	return sprintf('%04x', mt_rand(0, 0xffff));
+}
 
 $template = new FastTemplate("../../public/html/template/login");
 

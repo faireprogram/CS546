@@ -34,6 +34,9 @@
     </style>
     
     <script type="text/javascript">
+		if(!window.opener) {
+			window.location.replace("/cs546/php/login/login.php");
+		}
     	var dc = window.opener.duckchat;
     	function addFriend(li) {
     		if(dc) {
@@ -61,14 +64,14 @@
     					
     					"group" : "DefaultGroup"
     				},
-    				time : date.getTime()
+    				time : date.getTime()/1000
     			}
     			
     			$.ajax(
     					{
     						url: 	 url, 
     						type:	 "POST",
-    						data:	{cmd : cmd},
+    						data:	{cmd : cmd, id:dc.id, token:dc.token, m:"ajax"},
     						success: function(result){
     									console.log(result);
     									if(result == 'ok') {
@@ -97,7 +100,6 @@
 <body>
 	<section id = "Search">
 	<form method = "POST" action = "searchFriends.php">
-		<div>
 			<input type="text" name="kw" size="35" value="{KEYWORD}"></input>
 			<select name="sc">
 				<option value="Search by User's Name" {SELECTED1}>Search by User's Name</option>
@@ -105,9 +107,10 @@
 				<option value="Search by User's Cellphone" {SELECTED3}>Search by User's Cellphone</option>
 				<option value="Search by User's Address" {SELECTED4}>Search by User's Address</option>
 			</select>
+			<input type="hidden" value="{USER_ID}" name="id"/>
+			<input type="hidden" value="{USER_TOKEN}" name="token"/>
 			<button type="submit" name="submit"> Search</button>
-		</div>
-		<div class="error">{ERRORMESSAGE}</div>
+			<div class="error">{ERRORMESSAGE}</div>
 	</form>
 	<hr/>
 	<h1>result!</h1>

@@ -1,6 +1,6 @@
 <?php
 
-	include_once '../commons.php';
+	include_once '../security.php';
 
 	/**
 	 * @function:  log 
@@ -13,9 +13,18 @@
 		if($cmd["type"] == MSG_TYPE::RE_SEND_MSG) {
 			// no need to do anything
 		}
-// 		if($cmd["type"] == MSG_TYPE::ADD_FRIEND) {
-// 			_log_sendmsg($cmd);
-// 		}
+		if($cmd["type"] == MSG_TYPE::ADD_FRIEND) {
+			_log_addfriend($cmd);
+		}
+		if($cmd["type"] == MSG_TYPE::RE_ADD_FRIEND) {
+			_log_readdfriend($cmd);
+		}
+		if($cmd["type"] == MSG_TYPE::DELETE_FRIEND) {
+			_log_delfriend($cmd);
+		}
+		if($cmd["type"] == MSG_TYPE::RE_DELETE_FRIEND) {
+			_log_redelfriend($cmd);
+		}
 	}
 	
 	function clearlog($cmd) {
@@ -47,7 +56,49 @@
 	}
 	
 	function _log_addfriend($cmd) {
+		$message = pc(json_encode($cmd));
+		_log_operation($cmd["content"]["invitor"]["id"], $cmd["content"]["receiver"]["id"] , $message);
+	}
+	
+	function _log_readdfriend($cmd) {
+		$message = pc(json_encode($cmd));
+		_log_operation($cmd["content"]["invitor"]["id"], $cmd["content"]["receiver"]["id"] , $message);
+	}
+	
+	function _log_delfriend($cmd) {
+		$message = pc(json_encode($cmd));
+		_log_operation($cmd["content"]["deletor"]["id"], $cmd["content"]["delete"]["id"] , $message);
+	}
+	
+	function _log_redelfriend($cmd) {
+		$message = pc(json_encode($cmd));
+		_log_operation($cmd["content"]["deletor"]["id"], $cmd["content"]["delete"]["id"] , $message);
+	}
+	
+	function _log_operation($aid, $bid, $message) {
+		_log_operationimp($aid, $message);
+		_log_operationimp($bid, $message);
+	}
+	
+	function _log_operationimp($id, $message) {
+		global $mysqldi;
+		$selectSql = "select * from `operation` where user_id = '%d';";
+		$updatetSql = "update `operation` set `operations` = '%s' where user_id = '%d';";
+		$insertSql = "INSERT INTO `operation` (`user_id`, `operations`) VALUES ('%d', '%s')";
+		$mysqldi->send_sql(sprintf($selectSql, $id));
+		$row = $mysqldi->next_row();
+		$newOperation = $message;
+		if($row) {
+			$newOperation = $newOperation.PHP_EOL.pc($row["operations"]);
+		} else {
+			$newOperation = $newOperation.PHP_EOL;
+		}
 		
+		if($row) {
+			$mysqldi->send_sql(sprintf($updatetSql, $newOperation, $id));
+		} else {
+			$mysqldi->send_sql(sprintf($insertSql, $id, $newOperation));
+		}
 	}
 	
 	function writeMessage($senderid, $receiverid, $logmsgsent) {
@@ -80,4 +131,5 @@
 		}
 		return $compositId;
 	}
+	
 ?>

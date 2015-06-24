@@ -1,5 +1,5 @@
 <?php 
-include '../commons.php';
+include '../security.php';
 
 session_start();
 if(isset($_SESSION["login_id"])) {

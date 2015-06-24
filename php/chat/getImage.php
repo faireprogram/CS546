@@ -1,5 +1,6 @@
 <?php
-include '../commons.php';
+
+include_once '../commons.php';
 
 if(isset($_GET["id"]) && is_numeric($_GET["id"])) {
 	$selectSql = "select image from user where user_id = '%s'";

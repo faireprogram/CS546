@@ -17,9 +17,8 @@
 		this.activewin = null;
 		
 		//HISTORY MAX READ
-		
-		this.retrievebackgroups();
-		invoke(this, _rewritegroups, this.data);
+		duckchat.updateToken();
+
 //		this.shortpolling();
 		
 		$('body').click(function(e) {
@@ -158,6 +157,22 @@
 		return result;
 	}
 	
+	function _validate_user(txt) {
+		var result = {success: true, msg: ""};
+		var pattern = /^\w+$/g;
+		if(!txt) {
+			result.success = false;
+			result.msg = "Name shouldn't be Empty!";
+			return result;
+		}
+		if(!pattern.test(txt.trim()) || txt.trim().length > 20) {
+			result.success = false;
+			result.msg = "Name should be number or letter && length should less than 20 and can't be empty!!"
+			return result;
+		}
+		return result;
+	}
+	
 	function _bindvaluetoli(li, id, name, imgprofile, group) {
 		li.data("id", id);
 		li.data("name", name);
@@ -211,6 +226,34 @@
 		});
 	}
 	
+	function _getNameById(targetId) {
+		for(var group in this.data) {
+			for(var person in this.data[group]) {
+				if(targetId == person) {
+					return this.data[group][person].name;
+				}
+			}
+		}
+	}
+	
+	function _changeusername(li, newName) {
+		var id = li.data("id");
+		for(var group in this.data) {
+			var find = false;
+			for(var userid in this.data[group]) {
+				if(userid == id) {
+					find = true;
+					break;
+				}
+			}
+			if(find) {
+				this.data[group][id].name = newName;
+				li.data("name", newName);
+				break;
+			}
+		}
+	}
+	
 	function _moveusertogroup(userli, group_name) {
 		var uls = $("ul", $(".friendlist"));
 		uls.each(function() {
@@ -245,7 +288,7 @@
 		/*
 		 * clear data
 		 */
-		_clearData(data);
+		_clearData(this.data);
 	}
 	function _bindminusclick(ielement, ulelement, toggle) {
 		if(toggle) {
@@ -596,13 +639,43 @@
 					li_delete_icon.addClass("right");
 					var li_move_icon = _createmove();
 					li_move_icon.addClass("right");
-					li.append(li_delete_icon, li_move_icon, li_modify_icon);
+					var li_checked_icon = _createchecked();
+					li_checked_icon.addClass("right");
+					li_checked_icon.css("display", "none");
+					li.append(li_delete_icon, li_move_icon, li_modify_icon, li_checked_icon);
 					
-					li_modify_icon.bind("click", {icon:li_modify_icon, gptxt:li_txt } ,function(event) {
-						event.data.icon.removeClass("fa fa-minus-square");
-						event.data.icon.addClass("fa fa-plus-square");
-						event.data.gptxt.attr("disabled", false);
+					li_modify_icon.bind("click", {modify:li_modify_icon, check:li_checked_icon, litext:li_txt } ,function(event) {
+						var check = event.data.check;
+						var modify = event.data.modify;
+						_disableAllInput();
+						_disableCreateMode();
+						modify.css("display", "none");
+						check.css("display", "block");
+						event.data.litext.attr("disabled", false);
 					});
+					
+					li_checked_icon.bind("click", {modify:li_modify_icon, txt:li_txt, check:li_checked_icon } ,function(event) {
+						var check = event.data.check;
+						var modify = event.data.modify;
+						var txt = event.data.txt;
+						var li = modify.parent();
+						//verification
+						var var_result = invoke(this, _validate_user, txt.val());
+						if(!var_result.success) {
+							_setwarning_message(var_result.msg);
+							modify.css("display", "none");
+							check.css("display", "block");
+							txt.attr("disabled", false);
+							txt.focus();
+							return false;
+						}
+						
+						modify.css("display", "block");
+						check.css("display", "none");
+						txt.attr("disabled", true);
+						
+						invoke(this, _changeusername, li, txt.val());
+					}.bind(this));	
 					
 					var that = this;
 					li_delete_icon.bind("click", {current_li:li, data:this.data }, function(event) {
@@ -846,6 +919,17 @@
 		this.renewFriendList();
 	}
 	
+	function _dealPermissionError(cmd) {
+		var date = cmd["time"];
+		var device = cmd["content"]["device"];
+		var ip = cmd["content"]["ip"];
+		clearInterval(this.interval);
+		var succ = function() {
+			window.location.href = "/cs546/php/login/login.php";
+		}
+		this.message("<p>Someone Forced you offline:</p> <p>[IP] " + ip + " </p><p>[device] " + device + " </p> <p>[time] " + date + "</p> <p>Please login Again</p>" , succ, succ);
+	}
+	
 	function _dealReDelFriend(cmd) {
 		var compositeId =  _getCompositeId(cmd["content"]["deletor"]["id"], cmd["content"]["delete"]["id"]);
 		var win = $('#' + compositeId).parent();
@@ -867,6 +951,9 @@
 		}
 		if(cmd["type"] && cmd["type"] == "RE_DELETE_FRIEND") {
 			invoke(this, _dealReDelFriend, cmd);
+		}
+		if(cmd["type"] && cmd["type"] == "NOT_YOUR_RESOURCE") {
+			invoke(this, _dealPermissionError, cmd);
 		}
 	}
 	
@@ -906,7 +993,7 @@
 		var header = $('<header class="right"></header>');
 		var url = "php/chat/getImage.php?id=" + sender.id;
 		var profile_icon = $('<img class="profile_icon right " src=\"'+ url +'\"/>');
-		var profile_name = $('<p class="profile_name right"></p>').text(sender.name);
+		var profile_name = $('<p class="profile_name right"></p>').text(invoke(this, _getNameById, sender.id));
 		header.append(profile_icon, profile_name);
 		//message
 		var message = $('<p class="message right">' + message + '</p>');
@@ -930,7 +1017,14 @@
 		var top = window.innerHeight/2 - 200;
 		var left = window.innerWidth/2 - 225;
 		var str = "top=" + top + ", left=" + left + ", width=450, height=400";
-		 window.open("php/chat/searchFriends.php", "FindFriend", str);
+		 window.open("php/chat/searchFriends.php?id=" + this.id + "&token=" + this.token, "FindFriend", str);
+	}
+	
+	var openOperations = function() {
+		var top = window.innerHeight/2 - 200;
+		var left = window.innerWidth/2 - 225;
+		var str = "top=" + top + ", left=" + left + ", width=450, height=400";
+		window.open("php/chat/friendsViewer.php?id=" + this.id + "&token=" + this.token, "FriendOperations", str);
 	}
 	
 	var scrollMessageWindow = function(handler, type) {
@@ -971,6 +1065,11 @@
 		}
 		$("p", messagebox).text("");
 		$("p", messagebox).append($.parseHTML(msg));
+		var top = $("body").height()/2 - messagebox.height()/2;
+		console.log(messagebox.width()/2);
+		var left = $("body").width()/2 - messagebox.width()/2;
+		messagebox.css("left", left);
+		messagebox.css("top", top);
 		messagebox.css("display", "block");
 	}
 	
@@ -1048,13 +1147,13 @@
 									length : length
 				 			}
 				 		},
-				 		time : date.getTime()	
+				 		time : date.getTime()/1000	
 					}
 				$.ajax(
 						{
 							url: 	 url, 
 							type:	 "POST",
-							data:	 {"cmd" : cmd},
+							data:	 {"cmd" : cmd, id:this.id, token:this.token, m:"ajax"},
 							success: function(result){
 									if(!result) {
 										$(".loader").hide();
@@ -1093,7 +1192,7 @@
 															invoke(dc, addMessagetoRight, jsonObjs[index], jsonObjs[index]["time"], jsonObjs[index]["msg"], $("#" + compositeId), 1);
 														}
 													}
-													scrollMessageWindow($("#" + compositeId), 1);
+//													scrollMessageWindow($("#" + compositeId), 1);
 												}
 												
 										}
@@ -1128,13 +1227,13 @@
 				 			message : text
 				 // 				"message" : "This is a TEST!!"
 				 		},
-				 		time :time	
+				 		time :time/1000	
 					}
 				$.ajax(
 						{
 							url: 	 url, 
 							type:	 "POST",
-							data:	 {"cmd" : cmd},
+							data:	 {"cmd" : cmd, id:this.id, token:this.token, m:"ajax"},
 							success: function(result){
 								
 								if(result.trim() == "ok") {
@@ -1176,14 +1275,14 @@
 				 				name : deleteName
 				 			}
 				 		},
-				 		time :time	
+				 		time :time/1000
 					}
 				var dc = this;
 				$.ajax(
 						{
 							url: 	 url, 
 							type:	 "POST",
-							data:	 {"cmd" : cmd},
+							data:	 {"cmd" : cmd, id:this.id, token:this.token, m:"ajax"},
 							success: function(result){
 								
 								if(result.trim() == "ok") {
@@ -1214,14 +1313,14 @@
 						 				name : this.data["attributes"]["name"]
 							 		}
 								 },
-							 time : date
+							 time : date.getTime()/1000
 						 };
 				var duck = this;
 				$.ajax(
 				{
 					url: 	 url, 
 					type:	 "POST",
-					data:	{cmd : cmd},
+					data:	{cmd : cmd, id:this.id, token:this.token, m:"ajax"},
 					success: function(result){
 								if(!result) {
 									return;
@@ -1249,7 +1348,7 @@
 				$.ajax({
 							url: 	 request_url, 
 							type:	 "POST",
-							data:	{action:"read", id:7},
+							data:	{action:"read", id:dcc.id, token:dcc.token, "m":"ajax"},
 							success: function(result){
 										var all_messages = $.parseJSON(result);
 										console.log(all_messages);
@@ -1263,30 +1362,56 @@
 			
 			saveChanges: function() {
 				$(".loader").show();
-				request_url = "php/service/Service.php";
+				request_url = "php/service/FriendsListsService.php";
 				var dcc= this;
 				var friends =JSON.stringify(dcc.data);
 				$.ajax({
 							url: 	 request_url, 
 							type:	 "POST",
-							data:	{action:"save", id:"1", friends: friends},
+							data:	{action:"save", id: this.data.attributes["id"], friends: friends, id:this.id, token:this.token, m:"ajax"},
 							success: function(result){
 								console.log(result);
 								if(result == "ok") {
 									var setTimeoutid = setTimeout(function(){
 										_setinfo_message("Successefull save");
 										$(".loader").css("display", "none");
-										dc.renewFriendList();
+										dcc.renewFriendList();
 									}, 2000);
 								} else {
 									var setTimeoutid = setTimeout(function(){
 										_setwarning_message("Some Error happens here!!");
 										$(".loader").css("display", "none");
-										dc.renewFriendList();
+										dcc.renewFriendList();
 									}, 2000);
 								}
 							}
 						});
+			},
+			
+			updateToken: function() {
+				request_url = "php/login/UpdateToken.php";
+				var dcc= this;
+				$.ajax({
+					url: 	 request_url, 
+					type:	 "POST",
+					data:	{id: dcc.id, token: dcc.token},
+					success: function(result){
+						if(!result) {
+							return;
+						}
+						var arra = $.parseJSON(result);
+						dcc.id = arra["id"];
+						dcc.token = arra["token"];
+						
+					},
+					complete: function() {
+						dcc.retrievebackgroups();
+						invoke(dcc, _rewritegroups, dcc.data);
+						dcc.interval = setInterval(function() {
+							dcc.shortpolling();
+					 	}, 3000);
+					}
+				});
 			},
 			
 			makeNewWindow: function(li) {
@@ -1309,6 +1434,7 @@
 			showCancelConfirm: showCancelConfirm,
 			
 			openFindFriends: openFindFriends,
+			openOperations: openOperations,
 			
 			message: message,
 			
@@ -1368,7 +1494,7 @@
     		return str.replace(/\r?\n/g, '<BR/>');
 	    },
 	    date: function (timestamp) {
-			 var a = new Date(parseInt(timestamp));
+			 var a = new Date(parseInt(timestamp * 1000));
 			 var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
 			 var year = a.getFullYear();
 			 var month = months[a.getMonth()];

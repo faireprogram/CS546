@@ -66,7 +66,7 @@
 		$newcmd = "";
 		if($row) {
 			$currentcmd = $row["cmd"];
-			$newcmd = $currentcmd.PHP_EOL.$message;
+			$newcmd = pc($currentcmd).PHP_EOL.$message;
 		} else {
 			$newcmd = $message;
 		}
