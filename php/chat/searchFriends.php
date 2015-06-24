@@ -1,6 +1,6 @@
 <?php
 
-include '../commons.php';
+include '../security.php';
 
 include 'searchHelper.php';
 
@@ -14,6 +14,8 @@ $template->define(array(
 		"li" => "li.html"
 ));
 
+$template->assign("USER_ID", $ID);
+$template->assign("USER_TOKEN", $TOKEN);
 $template->assign("ERRORMESSAGE", "");
 $template->assign("KEYWORD", "");
 $template->assign("SELECTED1", "");

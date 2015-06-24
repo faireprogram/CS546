@@ -1,9 +1,12 @@
 <?php
-include_once "../commons.php";
 
 function verifyLogin() {
 	global $template;
 	global $dbc;
+	global $ID;
+	$TOKEN = v4().v4().v4().v4().v4();
+	$LOGIN_DEVICE =  pc($_SERVER['HTTP_USER_AGENT']);
+	$LOGIN_IP = pc($_SERVER['REMOTE_ADDR']);
 	if(isset($_POST["uname"]) && isset($_POST["pwd"])){
 		$correct = true;
 		if(empty($_POST["uname"])){
@@ -39,11 +42,15 @@ function verifyLogin() {
 			else{
 				$row = mysqli_fetch_assoc($res);
 				if(!empty($row)){
-					session_start();
-					$_SESSION["login_id"] = $row["user_id"];
-					$_SESSION["login_name"] = $row["user_name"];
-					$_SESSION["login_email"] = $row["user_email"];
-					header("Location: /cs546");
+					$ID = $row["user_id"];
+					logLogin($ID, $TOKEN, $LOGIN_IP, $LOGIN_DEVICE);
+					
+					setVariable($ID, "LOGIN_NAME", $row["user_name"]);
+					setVariable($ID, "LOGIN_EMAIL", $row["user_email"]);
+					setVariable($ID, "LOGIN_CELLPHONE", $row["user_cellphone"]);
+					$param = "id=".$ID."&token=".$TOKEN;
+					
+					header("Location: /cs546?".$param);
 				} else {
 					$isFind = false; 
 				}
@@ -59,11 +66,15 @@ function verifyLogin() {
 			else{
 				$row = mysqli_fetch_assoc($res);
 				if(!empty($row)){
-					session_start();
-					$_SESSION["login_id"] = $row["user_id"];
-					$_SESSION["login_name"] = $row["user_name"];
-					$_SESSION["login_email"] = $row["user_email"];
-					header("Location: /cs546");
+					$ID = $row["user_id"];
+					logLogin($ID, $TOKEN, $LOGIN_IP, $LOGIN_DEVICE);
+					
+					setVariable($ID, "LOGIN_NAME", $row["user_name"]);
+					setVariable($ID, "LOGIN_EMAIL", $row["user_email"]);
+					setVariable($ID, "LOGIN_CELLPHONE", $row["user_cellphone"]);
+					
+					$param = "id=".$ID."&token=".$TOKEN;
+					header("Location: /cs546?".$param);
 				} else {
 					$isFind = false;
 				}

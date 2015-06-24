@@ -102,4 +102,13 @@
 	*		time: sendtime
 	* 	}
 	*/
+
+	/*
+	 * OPERATION_HISTORY : {
+	* 		type: OPERATION_HISTORY,
+	*		content:
+	*				self, {name, id}
+	*		time: sendtime
+	* 	}
+	*/
 ?>

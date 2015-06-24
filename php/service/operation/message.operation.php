@@ -1,6 +1,6 @@
 <?php
 
-include_once '../commons.php';
+include_once '../security.php';
 
 	function msgcmd_execute($cmd) {
 		if(!_validate_msgcmd($cmd)) {

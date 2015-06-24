@@ -13,9 +13,8 @@
 		
 		<script type="text/javascript">
 		 	var duckchat = new DuckChat();
-		 	setInterval(function() {
-		 		duckchat.shortpolling();
-		 	}, 3000);
+		 	duckchat.token = '{USER_TOKEN}';
+		 	duckchat.id = '{USER_ID}';
 		</script>
 	</head>
 	<body onload="javascript:duckchat.initiliaze();">
@@ -53,6 +52,9 @@
 			
 			<div class="toolbar_wrapper wrapper">
 				<section id="toolbar" class="toolbar">
+					<nav class="operation">
+						<a title="Friends Logs" onclick="javascript:duckchat.openOperations();"></a>
+					</nav>
 					<!-- Tool Bar here! -->
 				</section>
 			</div>

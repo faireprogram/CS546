@@ -1,5 +1,5 @@
 <?php
-include_once "../commons.php";
+
 function verifyandinsert() {
 	global $template;
 	global $dbc;
