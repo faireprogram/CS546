@@ -1,6 +1,6 @@
 <?php 
 
-include '../security.php';
+include '../commons.php';
 include 'RegisterVerify.php';
 
 $template = new FastTemplate("../../public/html/template/register");

@@ -476,10 +476,18 @@ div.textarea:focus {
  	 margin-left: 15px;
  }
  
+ .message.left span.time{
+ 	width: calc(100% - 30px);
+ }
+ 
+ 
+ .message.right span.time {
+ 	width: calc(100% - 15px);
+ }
+ 
 .message span.time {
   position: absolute;
-  width: 50%;
-  text-align: right;
+  text-align: center;
   bottom: -10px;
   font-size: 10px;
   font-weight: bold;

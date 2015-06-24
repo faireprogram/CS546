@@ -1239,7 +1239,7 @@
 								
 								if(result.trim() == "ok") {
 									var setTimeoutid = setTimeout(function(){
-										  addMessagetoLeft(sender, time, text ,$("#" + compositeId));
+										  addMessagetoLeft(sender, time/1000, text ,$("#" + compositeId));
 										  scrollMessageWindow($("#" + compositeId));
 										$(".loader").css("display", "none");
 									}, 1500);
