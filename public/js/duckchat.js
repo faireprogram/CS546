@@ -317,6 +317,24 @@
 		}
 	}
 	
+	function slash (string) {
+    	var tagsToReplace = {
+    		    '&': '&amp;',
+    		    '<': '&lt;',
+    		    '>': '&gt;'
+		};
+    	
+    	function replaceTag(tag) {
+    	    return tagsToReplace[tag] || tag;
+    	}
+
+		var safe_tags_replace = function (str) {
+		    return str.replace(/[&<>]/g, replaceTag);
+		};
+		var str = safe_tags_replace(string);
+		return str.replace(/\r?\n/g, '<BR/>');
+    }
+	
 	
 	function _retrievegps(current_li) {
 		var current_group = current_li.data("group");
@@ -1211,7 +1229,7 @@
 				
 				var date = new Date();
 				var url = "php/service/Service.php";
-				var text = $(itm).parent().prev().val() ? $.slash($(itm).parent().prev().val().trim()) : "";
+				var text = $(itm).parent().prev().val() ? slash($(itm).parent().prev().val().trim()) : "";
 				var compositeId = _getCompositeId(sender["id"], receiver["id"]);
 				var time = date.getTime();
 				var cmd = {
@@ -1490,23 +1508,6 @@
 	    		return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 	    	}
     		return S4() + S4() + S4();
-	    },
-	    slash: function (string) {
-	    	var tagsToReplace = {
-	    		    '&': '&amp;',
-	    		    '<': '&lt;',
-	    		    '>': '&gt;'
-    		};
-	    	
-	    	function replaceTag(tag) {
-	    	    return tagsToReplace[tag] || tag;
-	    	}
-
-    		var safe_tags_replace = function (str) {
-    		    return str.replace(/[&<>]/g, replaceTag);
-    		};
-    		var str = safe_tags_replace(string);
-    		return str.replace(/\r?\n/g, '<BR/>');
 	    },
 	    date: function (timestamp) {
 			 var a = new Date(parseInt(timestamp * 1000));
