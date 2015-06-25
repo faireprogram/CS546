@@ -6,6 +6,11 @@ include_once '../security.php';
 		if(!_validate_msgcmd($cmd)) {
 			return;
 		}
+		$msg = $cmd["content"]["message"];
+		if(preg_match('/[<>]/i', $msg)) {
+			$cmd["content"]["message"] = htmlspecialchars($cmd["content"]["message"]);
+		}
+		
 		if($cmd["type"] == MSG_TYPE::SEND_MSG) {
 			_sendmsgcmd_execute($cmd);
 		}
