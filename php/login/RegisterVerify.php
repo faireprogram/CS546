@@ -78,10 +78,10 @@ function verifyandinsert() {
 	}
 	else{
 		$gender = pc($_POST['gender']);
-		if($gender == "male") {
+		if($gender == "m") {
 			$template->assign("CHECKED1", "checked");
 		}
-		if($gender == "femaile") {
+		if($gender == "f") {
 			$template->assign("CHECKED2", "checked");
 		}
 	} 
@@ -114,12 +114,11 @@ function verifyandinsert() {
 		if (mysqli_num_rows ( $result_verify_email ) == 0) { // IF no previous user is using this email .
 		                                                     
 			// Create a unique activation code:
-			$activation = md5 ( uniqid ( rand (), true ) );
 			
 			$query_insert_user = "INSERT INTO user ( `user_name`, `user_email`, `user_cellphone`, `user_pwd` , `user_address`, `user_age`, `user_gender`, `retrieve_q1`, `retrieve_q2`, `retrieve_q3`, `image`)".
 			"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
 			
-			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, $Password, $addr,$age, $gender, $rq1, $rq2, $rq3, pc($profileImg)) );
+			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, password_hash($Password, PASSWORD_DEFAULT), $addr,$age, $gender, $rq1, $rq2, $rq3, pc($profileImg)) );
 			if (! $result_insert_user) {
 				$template->assign("MESSAGE", 'Query Failed ') ;
 				$template->parse("CONTENT", "main");

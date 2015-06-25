@@ -106,7 +106,18 @@
 				<option value="Search by User's Email" {SELECTED2}>Search by User's Email</option>
 				<option value="Search by User's Cellphone" {SELECTED3}>Search by User's Cellphone</option>
 				<option value="Search by User's Address" {SELECTED4}>Search by User's Address</option>
+				<option value="Search by User's Gender" {SELECTED5}>Search by User's Gender</option>
+				<option value="Search by User's Age Range" {SELECTED6}>Search by User's Age Range</option>
 			</select>
+			<p>Search by User's Gender:</p>
+			<input type = "radio" name = "gender" value = "male">Male
+			<input type = "radio" name = "gender" value = "female">Female
+			<input type = "radio" name = "gender" value = "both">Both
+			<p>Search by User's Age Range:</p>
+			<p>From</p>
+			<select name = "sa">{SA}</select>
+			<p>To</p>
+			<select name = "ea">{EA}</select>
 			<input type="hidden" value="{USER_ID}" name="id"/>
 			<input type="hidden" value="{USER_TOKEN}" name="token"/>
 			<button type="submit" name="submit"> Search</button>
