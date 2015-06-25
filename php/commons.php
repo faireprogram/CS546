@@ -16,7 +16,7 @@ include_once  dirname(__FILE__).'/utils/CmdHelper.php';
  * Need To check it works?
  */
 //make sure data/img exist
-if(!file_exists("../data/img/exist")) {
-	mkdir("../data/img/exist", 0777, true);
+if(!file_exists("../data/img")) {
+	mkdir("../data/img", 0777, true);
 }
 
