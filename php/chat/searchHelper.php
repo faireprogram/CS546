@@ -8,13 +8,13 @@ function search() {
 	if (!isset($_POST ["kw"]) || empty ( $_POST ["kw"] )) {
 		$error [] = "Please input a searching key word";
 	} else {
-		$kw = $_POST ["kw"];
+		$kw = pc($_POST ["kw"]);
 		$template->assign("KEYWORD", $_POST ["kw"]);
 	}
 	if (!isset($_POST ["sc"]) || empty ( $_POST ["sc"] )) {
 		$error [] = "Please select one searching condition";
 	} else {
-		$sc = $_POST ["sc"];
+		$sc = pc($_POST ["sc"]);
 		if($_POST ["sc"] == "Search by User's Name") {
 			$template->assign("SELECTED1", $_POST ["sc"]);
 		}
