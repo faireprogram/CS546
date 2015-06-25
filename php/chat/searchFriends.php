@@ -22,7 +22,13 @@ $template->assign("SELECTED1", "");
 $template->assign("SELECTED2", "");
 $template->assign("SELECTED3", "");
 $template->assign("SELECTED4", "");
+$template->assign("SELECTED5", "");
+$template->assign("SELECTED6", "");
 $template->assign("RESULT", "Nothing Show!");
+for($i=0; $i<=100; $i++){
+	$template->assign("SA", "<option value = \"$i\">$i</option>");
+	$template->assign("EA", "<option value = \"$i\">$i</option>");
+}
 if(isset($_POST["submit"])) {
 	search();
 }
