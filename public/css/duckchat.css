@@ -712,3 +712,61 @@ li {line-height:1.3em;}
 	background: url("../img/nav.png") -30px center no-repeat;
 	height: 100%;
 }
+
+/* ----------------------------  responsible css code here        */
+.sidebar {
+	position: absolute;
+	display:none;
+	right: 0;
+	top: 18px;
+	bottom: 152px;
+	width: 15px;
+	z-index: 25;
+	background-color: #FFFCFC;
+}
+
+.sidebar i{
+	position: absolute;
+	top: 50%;
+	font-size: 10px;
+ 	margin: -3px 3px;
+ 	cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
+	.dialog_wrapper {
+		right: 0;
+	}
+	.friendslist_wrapper.wrapper {
+		display:none;
+		right: 15px;
+		top: 18px;
+		z-index: 30;
+		background-color: #FFFCFC;
+	}
+	
+	.selectmenu_wrapper {
+		z-index: 31;
+	}
+	
+	.popup_wrapper {
+		z-index: 1000;'
+	}
+	
+	.userpannerl {
+		left:0;
+		right:0;
+		top:0;
+		bottom:0;
+	}
+	.sidebar {
+		display:block;
+	}
+	
+	.dialog_panel{
+		left:0;
+		bottom:0;
+		right:0;
+		top:0;
+	}
+}

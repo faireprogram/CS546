@@ -2,10 +2,6 @@
 
 include '../security.php';
 
-function v4() {
-	return sprintf('%04x', mt_rand(0, 0xffff));
-}
-
 $newToken = v4().v4().v4().v4().v4();
 
 

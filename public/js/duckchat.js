@@ -1455,6 +1455,19 @@
 			renewFriendList: function () {
 				this.retrievebackgroups();
 				invoke(this, _rewritegroups, this.data);
+			},
+			
+			expand: function(item) {
+				var has = $(item).hasClass("fa-plus");
+				if(has) {
+					$(".friendslist_wrapper").show();
+					$(item).removeClass("fa-plus");
+					$(item).addClass("fa-minus");
+				} else {
+					$(".friendslist_wrapper").hide();
+					$(item).removeClass("fa-minus");
+					$(item).addClass("fa-plus");
+				}
 			}
 	}
 	

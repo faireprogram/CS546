@@ -15,14 +15,32 @@
 		 	var duckchat = new DuckChat();
 		 	duckchat.token = '{USER_TOKEN}';
 		 	duckchat.id = '{USER_ID}';
+		 	
+		 	function show800() {
+		 		if(window.innerWidth > 800) {
+		 			$('.friendslist_wrapper').show();
+		 		} else {
+		 			$('.friendslist_wrapper').hide();
+		 			item = $(".sidebar i");
+		 			if(item.hasClass("fa-minus")) {
+						$(item).removeClass("fa-minus");
+						$(item).addClass("fa-plus");	
+		 			}
+
+		 		}
+		 	}
 		</script>
 	</head>
-	<body onload="javascript:duckchat.initiliaze();">
+	<body onload="javascript:duckchat.initiliaze();" onresize="show800();">
 		<div class="container_wrapper">
 		
 			<div class="desktop_wrapper wrapper">
 			</div>
-		
+			
+			<div class="sidebar">
+				<i class="fa fa-plus" onclick="javascript:duckchat.expand(this);"></i>
+			</div>
+			
 			<div class="friendslist_wrapper wrapper">
 				<section class="userpannerl">
 					<div class="user_info">
