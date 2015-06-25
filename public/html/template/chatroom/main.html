@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=9">
 		<title>DuckChat System 1.0</title>
 		
 		<link type="text/css" href="public/css/bootstrap-clean.css" rel="stylesheet">
@@ -22,7 +21,7 @@
 		 			$('.friendslist_wrapper').show();
 		 		} else {
 		 			$('.friendslist_wrapper').hide();
-		 			item = $("i", $(".sidebar"));
+		 			var item = $("i", $(".sidebar"));
 		 			if(item.hasClass("fa-minus")) {
 						$(item).removeClass("fa-minus");
 						$(item).addClass("fa-plus");	
