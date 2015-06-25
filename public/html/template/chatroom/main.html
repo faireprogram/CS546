@@ -22,7 +22,7 @@
 		 			$('.friendslist_wrapper').show();
 		 		} else {
 		 			$('.friendslist_wrapper').hide();
-		 			item = $(".sidebar i");
+		 			item = $("i", $(".sidebar"));
 		 			if(item.hasClass("fa-minus")) {
 						$(item).removeClass("fa-minus");
 						$(item).addClass("fa-plus");	
