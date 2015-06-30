@@ -54,11 +54,40 @@
     			reader.readAsDataURL(file);
     		}
     	}
+    	
+    	function validateInput(){
+    		var uname = document.forms["myform"]["uname"].value;
+    		var pwd = document.forms["myform"]["pwd"].value;
+    		var cpwd = document.forms["myform"]["cpwd"].value;
+    		var em = document.forms["myform"]["e-mail"].value;
+    		var cell = document.forms["myform"]["cell"].value;
+    		if(uname == "" || uname == null){
+    			alert("User name can not be empty");
+    			return false;
+    		}
+    		if(pwd == "" || pwd == null){
+    			alert("Password cannot be empty");
+    			return false;
+    		}
+    		else if(cpwd != pwd){
+    			alert("Two passwords do not match");
+    			return false;
+    		}
+    		if(em == "" || em == null){
+    			alert("E-Mail cannot be empty");
+    			return false;
+    		}
+    		if(cell == "" || cell == null){
+    			alert("Cellphone number cannot be empty");
+    			return false;
+    		}
+    	}
+    	
     </script>
 </head>
 <body>
 	<section id = "Register">
-	<form method="POST" action="Register.php" enctype="multipart/form-data">
+	<form name = "myForm" method="POST" action="Register.php" onsubmit = "return validateInput()" enctype="multipart/form-data">
 		<header>
 		<b>User please register here.</b><br>
 		</header>

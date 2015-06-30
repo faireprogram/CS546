@@ -4,11 +4,25 @@
     <title>CS546 Final Project</title>
     <meta name="description=" content="My name is Zejie Ding. I work with Wen Zhang on CS546 final project">
     <meta charset="UTF-8">
+    <script>
+    function validateInput() {
+        var u = document.forms["myForm"]["uname"].value;
+        var pwd = document.forms["myForm"]["pwd"].value;
+        if (u == null || u == "") {
+            alert("User Name must be filled out");
+            return false;
+        }
+        else if (pwd == null || pwd == ""){
+        	alert("Password must be filled out");
+        	return false;
+        }
+    }
+    </script>
   </head>
   
   <body>  
 	<section id = "login">
-	<form method="POST" action="Login.php">
+	<form name = "myForm" method="POST" action="Login.php" onsubmit = "return validateInput()">
 		<header>
 		<b>User please log in here.</b><br>
 		</header>
