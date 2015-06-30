@@ -7,9 +7,9 @@ include_once '../security.php';
 			return;
 		}
 		$msg = $cmd["content"]["message"];
-		if(preg_match('/[<>]/i', $msg)) {
-			$cmd["content"]["message"] = htmlspecialchars($cmd["content"]["message"]);
-		}
+// 		if(preg_match('/[<>]/i', $msg)) {
+// 			$cmd["content"]["message"] = htmlspecialchars($cmd["content"]["message"]);
+// 		}
 		
 		if($cmd["type"] == MSG_TYPE::SEND_MSG) {
 			_sendmsgcmd_execute($cmd);

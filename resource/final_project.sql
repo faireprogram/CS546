@@ -1,6 +1,7 @@
 
 drop schema if exists `cs546` ;
 
+create schema `cs546`;
 use `cs546`;
 
 CREATE TABLE `user` (
@@ -11,9 +12,6 @@ CREATE TABLE `user` (
   `user_address` varchar(100) DEFAULT NULL,
   `friends` varchar(5000) DEFAULT NULL,
   `user_pwd` varchar(45) NOT NULL,
-  `retrieve_q1` varchar(45) NOT NULL,
-  `retrieve_q2` varchar(45) NOT NULL,
-  `retrieve_q3` varchar(45) NOT NULL,
   `user_age` int(10) unsigned DEFAULT NULL,
   `user_gender` varchar(2) DEFAULT NULL,
   `image` varchar(100) DEFAULT NULL,

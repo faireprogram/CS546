@@ -995,7 +995,7 @@
 		var profile_name = $('<p class="profile_name">' + sender.name +'</p>');
 		header.append(profile_icon, profile_name);
 		//message
-		var message = $('<p class="message left">' + message + '</p>');
+		var message = $('<p class="message left">' + slash(message) + '</p>');
 		var time = $("<span></span>").addClass("time").text($.date(time));
 		message.prepend(time);
 		article.append(header, message);
@@ -1015,7 +1015,7 @@
 		var profile_name = $('<p class="profile_name right"></p>').text(invoke(this, _getNameById, sender.id));
 		header.append(profile_icon, profile_name);
 		//message
-		var message = $('<p class="message right">' + message + '</p>');
+		var message = $('<p class="message right">' + slash(message) + '</p>');
 		var time = $("<span></span>").addClass("time").text($.date(time));
 		message.prepend(time);
 		article.append(header, message);
@@ -1229,7 +1229,7 @@
 				
 				var date = new Date();
 				var url = "php/service/Service.php";
-				var text = $(itm).parent().prev().val() ? slash($(itm).parent().prev().val().trim()) : "";
+				var text = $(itm).parent().prev().val() ? $(itm).parent().prev().val().trim() : "";
 				var compositeId = _getCompositeId(sender["id"], receiver["id"]);
 				var time = date.getTime();
 				var cmd = {

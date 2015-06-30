@@ -20,10 +20,6 @@ $template->assign("AGE", "");
 $template->assign("CHECKED1", "");
 $template->assign("CHECKED2", "");
 $template->assign("MESSAGE", "");
-$template->assign("Q1", "");
-$template->assign("Q2", "");
-$template->assign("Q3", "");
-
 $template->parse("CONTENT", "main");
 
 if (isset ( $_POST ['formsubmitted'] )) {

@@ -19,11 +19,15 @@
     <script type="text/javascript">
     
     	function showErrorLogs(error) {
+    		var ol = document.querySelector("div.error > ol");
     		var div = document.querySelector("div.error");
-    		div.innerHTML = "";
-   			var p = document.createElement("p");
-   			p.innerHTML = error;
-   			div.appendChild(p);
+    		if(!ol) {
+    			ol = document.createElement("ol");
+    			div.appendChild(ol);
+    		}
+   			var li = document.createElement("li");
+   			li.innerHTML = error;
+   			ol.appendChild(li);
     	}
     	
     	function clearErrorLog() {
@@ -41,7 +45,7 @@
     			showErrorLogs("File Should Exist and The size should less than 2M");
     			return;
     		}
-    		if(!/\.(jpg|png|gif)$/gi.test(file.name)) {
+    		if(!/\.(jpg|png|gif|jpeg)$/gi.test(file.name)) {
     			showErrorLogs("The profileImage should be  a Image");
     			return;
     		}
@@ -56,30 +60,47 @@
     	}
     	
     	function validateInput(){
-    		var uname = document.forms["myform"]["uname"].value;
-    		var pwd = document.forms["myform"]["pwd"].value;
-    		var cpwd = document.forms["myform"]["cpwd"].value;
-    		var em = document.forms["myform"]["e-mail"].value;
-    		var cell = document.forms["myform"]["cell"].value;
+    		clearErrorLog();
+    		var uname = document.forms["myForm"]["uname"].value;
+    		var pwd = document.forms["myForm"]["pwd"].value;
+    		var cpwd = document.forms["myForm"]["cpwd"].value;
+    		var em = document.forms["myForm"]["e-mail"].value;
+    		var cell = document.forms["myForm"]["cell"].value;
+    		var gender = document.forms["myForm"]["gender"].value;
+      		var age = document.forms["myForm"]["age"].value;
+    		var error = true;
     		if(uname == "" || uname == null){
-    			alert("User name can not be empty");
-    			return false;
+    			showErrorLogs("User name can not be empty");
+    			error = false;
     		}
-    		if(pwd == "" || pwd == null){
-    			alert("Password cannot be empty");
-    			return false;
+    		if(pwd == "" || pwd == null ){
+    			showErrorLogs("Password cannot be empty");
+    			error = false;
     		}
     		else if(cpwd != pwd){
-    			alert("Two passwords do not match");
-    			return false;
+    			showErrorLogs("Two passwords do not match");
+    			error = false;
     		}
     		if(em == "" || em == null){
-    			alert("E-Mail cannot be empty");
-    			return false;
+    			showErrorLogs("E-Mail cannot be empty");
+    			error = false;
     		}
     		if(cell == "" || cell == null){
-    			alert("Cellphone number cannot be empty");
+    			showErrorLogs("Cellphone number cannot be empty");
+    			error = false;
+    		}
+    		if(gender == "" || gender == null){
+    			showErrorLogs("Gender should be selected");
+    			error = false;
+    		}
+    		if(age == "" || age == null || !/^\d{1,2}$/gi.test(age.trim())){
+    			showErrorLogs("Age can't be empty and must be number");
+    			error = false;
+    		}
+    		if(!error) {
     			return false;
+    		} else {
+    			return true;
     		}
     	}
     	
@@ -87,7 +108,7 @@
 </head>
 <body>
 	<section id = "Register">
-	<form name = "myForm" method="POST" action="Register.php" onsubmit = "return validateInput()" enctype="multipart/form-data">
+	<form name = "myForm" method="POST" action="Register.php" onsubmit = "return validateInput();" enctype="multipart/form-data">
 		<header>
 		<b>User please register here.</b><br>
 		</header>
@@ -108,7 +129,7 @@
 			</tr>
 			<tr>
 				<td><b>E-Mail:</b></td>  
-				<td><input type="text" id="e-mail" name="e-mail" size="25" value="{EMAIL}"/></td>
+				<td><input type="email" id="e-mail" name="e-mail" size="25" value="{EMAIL}"/></td>
 			</tr>
 			<tr>
 				<td><b>Cellphone:</b></td>  
@@ -120,31 +141,13 @@
 			</tr>
 			<tr>
 				<td><b>Age:</b></td>  
-				<td><input type="text" id="age" name="age" size="25" value="{AGE}"/></td>
+				<td><input type="number" id="age" name="age" size="25" value="{AGE}"/></td>
 			</tr>
 			<tr>
 				<td><b>Gender:</b></td>  
 				<td>
 					<input type="radio" name="gender" id="male" value="m" {CHECKED1}/> <label for="male">Male</label>
 					<input type="radio" name="gender" id="female" value="f" {CHECKED2} /> <label for="female">Female</label>	
-				</td>
-			</tr>
-			<tr>
-				<td><b> What is the name of your first school?</b></td>  
-				<td>
-					<input type="text" id="rq1" name="rq1" size="25" value="{Q1}"/>
-				</td>
-			</tr>
-			<tr>
-				<td><b> What is your pet's name?</b></td>  
-				<td>
-					<input type="text" id="rq2" name="rq2" size="25" value="{Q2}"/>
-				</td>
-			</tr>
-			<tr>
-				<td><b>What is your last name</b></td>  
-				<td>
-					<input type="text" id="rq3" name="rq3" size="25"  value="{Q3}"/>
 				</td>
 			</tr>
 			<tr>

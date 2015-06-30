@@ -26,7 +26,7 @@ function verifyandinsert() {
 	if (!isset($_POST ['pwd']) && empty ( $_POST ['pwd'] )) {
 		$error [] = 'Please Enter Your Password ';
 	} else {
-		$Password = $_POST ['pwd'];
+		$Password = pc($_POST ['pwd']);
 	}
 	if (!isset($_POST ['cpwd']) || empty ( $_POST ['cpwd'] )) {
 		$error [] = 'Please Confirm Your Password';
@@ -44,27 +44,6 @@ function verifyandinsert() {
 	} else {
 		$template->assign("ADDRESS", $_POST ['address']);
 		$addr = pc($_POST ['address']);
-	}
-	if (!isset($_POST ['rq1']) || empty ($_POST['rq1'])){
-		$error [] = 'Please answer the first question';
-	}
-	else{
-		$template->assign("Q1", $_POST ['rq1']);
-		$rq1 = pc($_POST ['rq1']);
-	}
-	if (!isset($_POST ['rq2']) || empty ($_POST['rq2'])){
-		$error [] = 'Please answer the second question';
-	}
-	else{
-		$template->assign("Q2", $_POST ['rq2']);
-		$rq2 = pc($_POST ['rq2']);
-	}
-	if (!isset($_POST ['rq3']) || empty ($_POST['rq3'])){
-		$error [] = 'Please answer the third question';
-	}
-	else{
-		$template->assign("Q3", $_POST ['rq3']);
-		$rq3 = pc($_POST ['rq3']);
 	}
 	if(!isset($_POST ['age']) || empty ($_POST['age'] )){
 		$error [] = 'Please enter your age';
@@ -84,23 +63,26 @@ function verifyandinsert() {
 		if($gender == "f") {
 			$template->assign("CHECKED2", "checked");
 		}
-	} 
-	if(!isset($_FILES['profileIcon']) && !is_array($_FILES['profileIcon'])) {
-		$error [] = 'Please Select your profile image';
-	} else {
+	}
+	$profileImg = "avatar.jpg";
+	if(isset($_FILES['profileIcon']) && is_array($_FILES['profileIcon'])) {
 		$fileName = $_FILES["profileIcon"]["name"];
 		$fileTmpLoc =  $_FILES["profileIcon"]["tmp_name"];
 		$fileErrorMsg = $_FILES["profileIcon"]["error"];
 		$segmentOfName = explode(".", $fileName);
 		$fileExt = end($segmentOfName);
-		if ($fileErrorMsg == 1) {
-			$error [] = "Unknown Error happens when upload profile image!";
-		}
-		$profileImg = rand(100000000000,999999999999).".".$fileExt;
-		$moveResult = move_uploaded_file($fileTmpLoc, "../data/img/$profileImg");
-		if($moveResult === false) {
-			$error [] = "Unknown Error happens when upload profile image!";
-		}
+		$extensionArr = array("jpeg", "jpg", "png", "gif");
+		if ($fileErrorMsg === 0) {
+			if(in_array(strtolower($fileExt), $extensionArr)) {
+				$profileImg = rand(100000000000,999999999999).".".$fileExt;
+				$moveResult = move_uploaded_file($fileTmpLoc, "../data/img/$profileImg");
+				if($moveResult === false) {
+					$error [] = "Unknown Error happens when upload profile image!";
+				}
+			} else {
+				$error [] = "Unknown Profile Image Extension! ".$fileExt;
+			}
+		} 
 	}
 	
 	if (empty ( $error )) // send to Database if there's no error '
@@ -115,10 +97,10 @@ function verifyandinsert() {
 		                                                     
 			// Create a unique activation code:
 			
-			$query_insert_user = "INSERT INTO user ( `user_name`, `user_email`, `user_cellphone`, `user_pwd` , `user_address`, `user_age`, `user_gender`, `retrieve_q1`, `retrieve_q2`, `retrieve_q3`, `image`)".
-			"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+			$query_insert_user = "INSERT INTO user ( `user_name`, `user_email`, `user_cellphone`, `user_pwd` , `user_address`, `user_age`, `user_gender`, `image`)".
+			"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
 			
-			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, password_hash($Password, PASSWORD_DEFAULT), $addr,$age, $gender, $rq1, $rq2, $rq3, pc($profileImg)) );
+			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, password_hash($Password, PASSWORD_DEFAULT), $addr,$age, $gender, pc($profileImg)) );
 			if (! $result_insert_user) {
 				$template->assign("MESSAGE", 'Query Failed ') ;
 				$template->parse("CONTENT", "main");
