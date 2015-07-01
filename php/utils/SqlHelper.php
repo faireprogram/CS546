@@ -65,6 +65,9 @@ function getGroups($personId) {
 
 function getPersonFromGroup($selfId, $personId) {
 	$groups = getGroups($selfId);
+	if(empty($groups)) {
+		return null;
+	}
 	foreach($groups as $group => $chatpersons) {
 		if($group == "attributes") {
 			continue;
