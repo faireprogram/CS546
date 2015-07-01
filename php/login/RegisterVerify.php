@@ -7,7 +7,7 @@ function verifyandinsert() {
 	if (!isset($_POST ['uname']) || empty ( $_POST ['uname'] )) { // if no name has been supplied
 		$error [] = 'Please Enter a user name '; // add to array "error"
 	} else {
-		$name = pc($_POST ['uname']); // else assign it a variable
+		$name = pc(strip_tags($_POST ['uname'])); // else assign it a variable
 		$template->assign("USER_NAME", $_POST ['uname']);
 	}
 	
@@ -17,7 +17,7 @@ function verifyandinsert() {
 		$template->assign("EMAIL", $_POST ['e-mail']);
 		if (preg_match ( "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $_POST ['e-mail'] )) {
 				// regular expression for email validation
-				$Email = pc($_POST ['e-mail']);
+				$Email = pc(strip_tags($_POST ['e-mail']));
 		} else {
 			$error [] = 'Your EMail Address is invalid  ';
 		}
@@ -43,7 +43,7 @@ function verifyandinsert() {
 		$error [] = 'Please enter your address';
 	} else {
 		$template->assign("ADDRESS", $_POST ['address']);
-		$addr = pc($_POST ['address']);
+		$addr = pc(strip_tags($_POST ['address']));
 	}
 	if(!isset($_POST ['age']) || empty ($_POST['age'] )){
 		$error [] = 'Please enter your age';
@@ -106,7 +106,7 @@ function verifyandinsert() {
 				$template->parse("CONTENT", "main");
 			}
 			if (mysqli_affected_rows ( $dbc ) == 1) { // If the Insert Query was successfull.
-				$template->assign("SUCC_MESSAGE", "Thank you for registering! A confirmation email has been sent to " . $Email);
+				$template->assign("SUCC_MESSAGE", "Thank you for registering!");
 				$template->parse("CONTENT", "success");
 			} else { // If it did not run OK.
 				$template->assign("You could not be registered due to a system error. We apologize for any inconvenience.", 'Query Failed ') ;
