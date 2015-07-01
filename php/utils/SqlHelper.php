@@ -22,6 +22,14 @@ db();
 
 
 /**
+ * @param retrieveChatGroups $codeString
+ * @return mixed
+ */
+function retrieveChatGroups($codeString) {
+	return json_decode($codeString, true);
+}
+
+/**
  * @function:  getPersonById
  */
 function getPersonById($personId) {

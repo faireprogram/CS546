@@ -165,9 +165,6 @@ function _validate_friendcmd($cmd) {
 /*
  * ----------------------   Change From Class Style to Object Style    ----------------------------------------
 */
-function retrieveChatGroups($codeString) {
-	return json_decode($codeString, true);
-}
 
 function _EmptyObject($personInfo) {
 	if(!$personInfo) {
