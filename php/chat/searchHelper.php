@@ -54,7 +54,7 @@ function search() {
 		$isinput = true;
 	}
 	
-	if(isset($_POST["sa"]) && !empty($_POST["sa"]) && isset($_POST["ea"]) && !empty($_POST["ea"])){
+	if(isset($_POST["sa"]) && isset($_POST["ea"]) ){
 		if($_POST["sa"] != 0 || $_POST["ea"] != 0) {
 			$isinput = true;
 			if(!(preg_match("/^\d+$/i", $_POST["sa"]) && preg_match("/^\d+$/i", $_POST["ea"]))) {
@@ -89,11 +89,11 @@ function search() {
 		$condition2 = "";
 		
 		
-		if(isset($_POST["gender"]) && $_POST["gender"] == "female"){
-			$condition2 =  "user_gender = 'female'";
+		if(isset($_POST["gender"]) && $_POST["gender"] == "f"){
+			$condition2 =  "user_gender = 'f'";
 		}
-		if(isset($_POST["gender"]) && $_POST["gender"] == "male"){
-			$condition2 = "user_gender = 'male'";
+		if(isset($_POST["gender"]) && $_POST["gender"] == "m"){
+			$condition2 = "user_gender = 'm'";
 		}
 
 		$condition3 = "";

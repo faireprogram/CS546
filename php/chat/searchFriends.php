@@ -54,10 +54,10 @@ for($i=0; $i<=100; $i++){
 }
 
 if(isset($_POST["gender"])) {
-	if($_POST["gender"] == "male") {
+	if($_POST["gender"] == "m") {
 		$template->assign("GENDER_CHECKED1", "checked");
 	}
-	if($_POST["gender"] == "female") {
+	if($_POST["gender"] == "f") {
 		$template->assign("GENDER_CHECKED2", "checked");
 	}
 }
