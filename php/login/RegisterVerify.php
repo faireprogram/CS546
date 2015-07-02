@@ -6,14 +6,19 @@ function verifyandinsert() {
 	$error = array (); // Declare An Array to store any error message
 	if (!isset($_POST ['uname']) || empty ( $_POST ['uname'] )) { // if no name has been supplied
 		$error [] = 'Please Enter a user name '; // add to array "error"
-	} else {
+	}elseif(strlen($_POST['uname']) > 40){ 
+		$error [] = 'Your user name is too long';
+	}else {
 		$name = pc(strip_tags($_POST ['uname'])); // else assign it a variable
 		$template->assign("USER_NAME", $_POST ['uname']);
 	}
 	
 	if (!isset($_POST ['e-mail']) || empty( $_POST ['e-mail'] )) {
 		$error [] = 'Please Enter your Email ';
-	} else {
+	}
+	elseif(strlen($_POST['e-mail']) > 40){
+		$error [] = 'Your e-mail is too long';
+	}else {
 		$template->assign("EMAIL", $_POST ['e-mail']);
 		if (preg_match ( "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $_POST ['e-mail'] )) {
 				// regular expression for email validation
@@ -25,6 +30,9 @@ function verifyandinsert() {
 	
 	if (!isset($_POST ['pwd']) && empty ( $_POST ['pwd'] )) {
 		$error [] = 'Please Enter Your Password ';
+	}
+	elseif(strlen($_POST['pwd']) > 30){
+		$error [] = 'Your password is too long ';
 	} else {
 		$Password = pc($_POST ['pwd']);
 	}
@@ -35,32 +43,40 @@ function verifyandinsert() {
 	}
 	if (!isset($_POST ['cell']) || empty ( $_POST ['cell'] )) {
 		$error [] = 'Please enter your cellphone number';
-	} else {
+	}
+	elseif (strlen($_POST['cell']) > 20){
+		$error [] = 'Your cellphone number is too longer, please check again';
+	}else {
 		$template->assign("CELLPHONE", $_POST ['cell']);
 		$cell = pc($_POST ['cell']);
 	}
+	
 	if (!isset($_POST ['address']) ||empty ( $_POST ['address'] )) {
 		$error [] = 'Please enter your address';
-	} else {
+	}
+	elseif (strlen($_POST['address']) > 90){
+		$error [] = 'Your address is too long';
+	}
+	else {
 		$template->assign("ADDRESS", $_POST ['address']);
 		$addr = pc(strip_tags($_POST ['address']));
 	}
-	if(!isset($_POST ['age']) || empty ($_POST['age'] )){
-		$error [] = 'Please enter your age';
+	if(!isset($_POST ['byear']) || empty ($_POST['byear'] )){
+		$error [] = 'Please enter your birth year';
 	}
 	else{
-		$template->assign("AGE", $_POST ['age']);
-		$age = pc($_POST['age']);
+		$template->assign("BYEAR", $_POST ['byear']);
+		$byear = pc($_POST['byear']);
 	}
 	if(!isset($_POST ['gender']) || empty($_POST['gender'])){
 		$error [] = 'Please choose your gender';
 	}
 	else{
 		$gender = pc($_POST['gender']);
-		if($gender == "male") {
+		if($gender == "m") {
 			$template->assign("CHECKED1", "checked");
 		}
-		if($gender == "female") {
+		if($gender == "f") {
 			$template->assign("CHECKED2", "checked");
 		}
 	}
@@ -97,16 +113,16 @@ function verifyandinsert() {
 		                                                     
 			// Create a unique activation code:
 			
-			$query_insert_user = "INSERT INTO user ( user_name, user_email, user_cellphone, user_pwd , user_address, user_age, user_gender, image)".
-			"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
+			$query_insert_user = "INSERT INTO user ( `user_name`, `user_email`, `user_cellphone`, `user_pwd` , `user_address`, `user_byear`, `user_gender`, `image`)".
+			"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
 			
-			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, password_hash($Password, PASSWORD_DEFAULT), $addr, $age, $gender, pc($profileImg)) );
+			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, password_hash($Password, PASSWORD_DEFAULT), $addr, $byear, $gender, pc($profileImg)) );
 			if (! $result_insert_user) {
 				$template->assign("MESSAGE", 'Query Failed ') ;
 				$template->parse("CONTENT", "main");
 			}
 			if (mysqli_affected_rows ( $dbc ) == 1) { // If the Insert Query was successfull.
-				$template->assign("SUCC_MESSAGE", "Thank you for registering!");
+				$template->assign("SUCC_MESSAGE", "Thank you for registering! A confirmation email has been sent to " . $Email);
 				$template->parse("CONTENT", "success");
 			} else { // If it did not run OK.
 				$template->assign("You could not be registered due to a system error. We apologize for any inconvenience.", 'Query Failed ') ;

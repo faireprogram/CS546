@@ -54,14 +54,14 @@ function search() {
 		$isinput = true;
 	}
 	
-	if(isset($_POST["sa"]) && isset($_POST["ea"]) ){
-		if($_POST["sa"] != 0 || $_POST["ea"] != 0) {
+	if(isset($_POST["sy"]) && isset($_POST["ey"]) ){
+		if($_POST["sy"] != date("Y")-100 || $_POST["ey"] != date("Y")-100) {
 			$isinput = true;
-			if(!(preg_match("/^\d+$/i", $_POST["sa"]) && preg_match("/^\d+$/i", $_POST["ea"]))) {
-				$error[] = "Age must be number!";
+			if(!(preg_match("/^\d+$/i", $_POST["sy"]) && preg_match("/^\d+$/i", $_POST["ey"]))) {
+				$error[] = "Year must be number!";
 			} else {
-				$sa = pc($_POST["sa"]);
-				$ea = pc($_POST["ea"]);
+				$sy = pc($_POST["sy"]);
+				$ey = pc($_POST["ey"]);
 			}
 		}
 	}
@@ -97,8 +97,8 @@ function search() {
 		}
 
 		$condition3 = "";
-		if(isset($sa) && isset($ea) && !($sa == 0 && $ea == 0)){
-			$condition3 = "user_age between '$sa' and '$ea'";
+		if(isset($sy) && isset($ey) && !($sy == date("Y")-100 && $ey == date("Y")-100)){
+			$condition3 = "user_byear between '$sy' and '$ey'";
 		}
 		
 		$condition = "";

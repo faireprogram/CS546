@@ -9,14 +9,22 @@ $template->define(array(
 		"main" => "main.html",
 		"ol" => "ol.html",
 		"li" => "li.html",
-		"success" => "success.html"
+		"success" => "success.html",
+		"option" => "option.html"
 ));
 
 $template->assign("USER_NAME", "");
 $template->assign("EMAIL", "");
 $template->assign("CELLPHONE", "");
 $template->assign("ADDRESS", "");
-$template->assign("AGE", "");
+for($i=date("Y")-100; $i<=date("Y"); $i++){
+	if(isset($_POST["byear"]) && $_POST["byear"] == $i){
+		$template->assign("BYEAR_SELECTED", "SELECTED");
+	}
+	$template->assign("byear", $i);
+	$template->parse("BYEAR", ".option");
+	$template->assign("BYEAR_SELECTED", "");
+}
 $template->assign("CHECKED1", "");
 $template->assign("CHECKED2", "");
 $template->assign("MESSAGE", "");

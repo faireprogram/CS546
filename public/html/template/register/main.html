@@ -140,14 +140,15 @@
 				<td><input type="text" id="address" name="address" size="25" value="{ADDRESS}"/></td>
 			</tr>
 			<tr>
-				<td><b>Age:</b></td>  
-				<td><input type="number" id="age" name="age" size="25" value="{AGE}"/></td>
+				<td><b>Year of Birth:</b></td>  
+				<td><select name = "byear">{BYEAR}</select>
+				</td>
 			</tr>
 			<tr>
 				<td><b>Gender:</b></td>  
 				<td>
-					<input type="radio" name="gender" id="male" value="male" {CHECKED1}/> <label for="male">Male</label>
-					<input type="radio" name="gender" id="female" value="female" {CHECKED2} /> <label for="female">Female</label>	
+					<input type="radio" name="gender" id="male" value="m" {CHECKED1}/> <label for="male">Male</label>
+					<input type="radio" name="gender" id="female" value="f" {CHECKED2} /> <label for="female">Female</label>	
 				</td>
 			</tr>
 			<tr>

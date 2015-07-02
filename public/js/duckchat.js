@@ -483,8 +483,9 @@
 			var offset = diag.data("historyoffset");
 			var owner = diag.data("owner");
 			var self = diag.data("self");
+			var timestamp = diag.data("timestamp");
 			if(chat.scrollTop() == 0) {
-				this.showHistory(offset, MAXREAD, owner, self, diag, 1);
+				this.showHistory(offset, MAXREAD, owner, self, diag, 1, timestamp);
 			}
 		}.bind(this));
 		
@@ -494,8 +495,9 @@
 			var offset = diag.data("historyoffset");
 			var owner = diag.data("owner");
 			var self = diag.data("self");
+			var timestamp = diag.data("timestamp");
 			if(chat.scrollTop() == 0) {
-				this.showHistory(offset, MAXREAD, owner, self, diag, 1);
+				this.showHistory(offset, MAXREAD, owner, self, diag, 1, timestamp);
 			}
 		}.bind(this));
 		
@@ -538,6 +540,7 @@
 		diag_panel.css("dispaly", "none");
 		// ---------------- bind value
 		this.wins.push(diag_panel);
+		diag_panel.data("timestamp", new Date().getTime()/1000);
 		diag_panel.data("id", compositeId);
 		diag_panel.data("historyoffset", 0);
 		diag_panel.data("owner", {id: targetId, name: targetName});
@@ -748,7 +751,7 @@
 							this.nicelyMinimizeWindow();
 							var win = this.makeNewWindow(li);
 							this.nicelyShowWindow(win);
-							this.showHistory(win.data("historyoffset"), MAXREAD, win.data("owner"), win.data("self"), win);
+							this.showHistory(win.data("historyoffset"), MAXREAD, win.data("owner"), win.data("self"), win, win.data("timestamp"));
 						}
 						
 					}.bind(this));
@@ -1141,7 +1144,7 @@
 			
 			pollingtime: 1000, // polling time 1 seconds
 			
-			showHistory: function(start, length, sender, receiver, win, iscroll) {
+			showHistory: function(start, length, sender, receiver, win, iscroll, time) {
 				/*
 				 * Show History Message
 				 */
@@ -1166,7 +1169,7 @@
 									length : length
 				 			}
 				 		},
-				 		time : date.getTime()/1000	
+				 		time : time
 					}
 				$.ajax(
 						{

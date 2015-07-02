@@ -12,8 +12,8 @@ $template->define(array(
 		"tr" => "tr.html",
 		"ol" => "ol.html",
 		"li" => "li.html",
-		"option_sa" => "option_sa.html",
-		"option_ea" => "option_ea.html"
+		"option_sy" => "option_sy.html",
+		"option_ey" => "option_ey.html"
 ));
 
 $template->assign("USER_ID", $ID);
@@ -36,21 +36,21 @@ $template->assign("SA_SELECTED", "");
 $template->assign("EA_SELECTED", "");
 $template->assign("TR", "");
 $template->assign("RESULT", "Nothing Show!");
-for($i=0; $i<=100; $i++){
-	if(isset($_POST["sa"]) && $_POST["sa"] == $i) {
-		$template->assign("SA_SELECTED", "selected");
+for($i=date("Y")-100; $i<=date("Y"); $i++){
+	if(isset($_POST["sy"]) && $_POST["sy"] == $i) {
+		$template->assign("SY_SELECTED", "selected");
 	}
 	$template->assign("num", $i);
-	$template->parse("SA", ".option_sa");
-	$template->assign("SA_SELECTED", "");
+	$template->parse("SY", ".option_sy");
+	$template->assign("SY_SELECTED", "");
 }
-for($i=0; $i<=100; $i++){
-	if(isset($_POST["ea"]) && $_POST["ea"] == $i) {
-		$template->assign("EA_SELECTED", "selected");
+for($i=date("Y")-100; $i<=date("Y"); $i++){
+	if(isset($_POST["ey"]) && $_POST["ey"] == $i) {
+		$template->assign("EY_SELECTED", "selected");
 	}
 	$template->assign("num", $i);
-	$template->parse("EA", ".option_ea");
-	$template->assign("EA_SELECTED", "");
+	$template->parse("EY", ".option_ey");
+	$template->assign("EY_SELECTED", "");
 }
 
 if(isset($_POST["gender"])) {
