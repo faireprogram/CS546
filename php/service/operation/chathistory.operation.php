@@ -16,19 +16,19 @@
 		$sender = $cmd["content"]["sender"]["id"];
 		$start = $cmd["content"]["index"]["start"];
 		$length = $cmd["content"]["index"]["length"];
-		$timestamp = $cmd["time"];
+		
 		
 		$compositeID = getABuserID($receiver, $sender);
 		
-		$mysqldi->send_sql(sprintf($selectSql, $compositeID, $timestamp));
+		$mysqldi->send_sql(sprintf($selectSql, $compositeID));
 		$row = $mysqldi->next_row();
 		if(!empty($row["log"])) {
-			_readfrom($start, $length, $timestamp , $row["log"]);
+			_readfrom($start, $length, $row["log"]);
 		}
 		
 	}
 	
-	function _readfrom($start, $length, $timestamp , $rawlog) {
+	function _readfrom($start, $length, $rawlog) {
 		$logs = preg_split("/\r?\n/", $rawlog);
 		$varstart = 0;
 		foreach ($logs as $value) {
@@ -36,12 +36,6 @@
 				$varstart++;
 				continue;
 			}
-			$message = json_decode($value, true);
-			if($message["time"] > $timestamp) {
-				$varstart++;
-				continue;
-			}
-			
 			if($varstart >= ($start + $length)) {
 				break;
 			}
