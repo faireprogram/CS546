@@ -52,7 +52,7 @@
 		
 		$receiverid = $cmd["content"]["receiver"]["id"];
 		$senderid = $cmd["content"]["sender"]["id"];
-		writeMessage($senderid, $receiverid, pc(json_encode($logmsgsent)));
+		writeMessage($senderid, $receiverid, $cmd["time"], pc(json_encode($logmsgsent)));
 	}
 	
 	function _log_addfriend($cmd) {
@@ -101,7 +101,7 @@
 		}
 	}
 	
-	function writeMessage($senderid, $receiverid, $logmsgsent) {
+	function writeMessage($senderid, $receiverid, $timestamp , $logmsgsent) {
 		global $mysqldi;
 		$compositId = getABuserID($senderid, $receiverid);
 		$selectSql = "SELECT  * FROM `message` where `abuser` = '%s';";
