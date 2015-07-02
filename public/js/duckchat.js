@@ -1230,6 +1230,7 @@
 				var date = new Date();
 				var url = "php/service/Service.php";
 				var text = $(itm).parent().prev().val() ? $(itm).parent().prev().val().trim() : "";
+				 $(itm).parent().prev().val("");
 				var compositeId = _getCompositeId(sender["id"], receiver["id"]);
 				var time = date.getTime();
 				var cmd = {
