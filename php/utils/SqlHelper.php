@@ -116,16 +116,16 @@ function getGroupByNameId($personId, $grpname) {
  * SINGLE 2 SINGLE login 
  */
 
-function isValidLogin($id, $token) {
-	if(!$id || !$token) {
+function isValidLogin($id, $token, $loginId) {
+	if(!$id || !$token || !$loginId) {
 		return false;
 	}
 	global $mysqldi;
 	$id = pc($id);
 	$token = pc($token);
-	$selectSql = "select * from user_login where user_id_cur = '%d' and token = '%s';";
+	$selectSql = "select * from user_login where user_id_cur = '%d' and token = '%s' and login_ip = '%s';";
 	
-	$mysqldi->send_sql(sprintf($selectSql, $id, $token));
+	$mysqldi->send_sql(sprintf($selectSql, $id, $token, $loginId));
 	$row = $mysqldi->next_row(); 
 	if($row) {
 		return true;
