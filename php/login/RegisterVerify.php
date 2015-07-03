@@ -1,5 +1,4 @@
 <?php
-
 function verifyandinsert() {
 	global $template;
 	global $dbc;
@@ -102,7 +101,6 @@ function verifyandinsert() {
 	}
 	
 	if (empty ( $error )) // send to Database if there's no error '
-
 	{
 		$query_verify_name = "SELECT * FROM user  WHERE user_name ='$name'";
 		$result_verify_name = mysqli_query ( $dbc, $query_verify_name );

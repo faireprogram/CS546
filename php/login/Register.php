@@ -1,10 +1,7 @@
 <?php 
-
 include '../commons.php';
 include 'RegisterVerify.php';
-
 $template = new FastTemplate("../../public/html/template/register");
-
 $template->define(array(
 		"main" => "main.html",
 		"ol" => "ol.html",
@@ -12,7 +9,6 @@ $template->define(array(
 		"success" => "success.html",
 		"option" => "option.html"
 ));
-
 $template->assign("USER_NAME", "");
 $template->assign("EMAIL", "");
 $template->assign("CELLPHONE", "");
@@ -22,11 +18,9 @@ $template->assign("CHECKED1", "");
 $template->assign("CHECKED2", "");
 $template->assign("MESSAGE", "");
 $template->parse("CONTENT", "main");
-
 if (isset ( $_POST ['formsubmitted'] )) {
 	verifyandinsert();
 }
-
 for($i=date("Y")-100; $i<=date("Y"); $i++){
 	if(isset($_POST["byear"]) && $_POST["byear"] == $i){
 		$template->assign("BYEAR_SELECTED", "SELECTED");
@@ -35,8 +29,6 @@ for($i=date("Y")-100; $i<=date("Y"); $i++){
 	$template->parse("BYEAR", ".option");
 	$template->assign("BYEAR_SELECTED", "");
 }
-
 $template->parse("CONTENT", "main");
-
 $template->FastPrint();
 ?>
