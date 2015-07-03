@@ -61,8 +61,8 @@ function verifyandinsert() {
 		$template->assign("ADDRESS", $_POST ['address']);
 		$addr = pc(strip_tags($_POST ['address']));
 	}
-	if(!isset($_POST ['byear']) || empty ($_POST['byear'] )){
-		$error [] = 'Please enter your birth year';
+	if(!isset($_POST ['byear']) || empty ($_POST['byear'] ) || !isValidYear($_POST['byear'])){
+		$error [] = 'Please enter your valid birth year';
 	}
 	else{
 		$template->assign("BYEAR", $_POST ['byear']);
@@ -104,12 +104,18 @@ function verifyandinsert() {
 	if (empty ( $error )) // send to Database if there's no error '
 
 	{
+		$query_verify_name = "SELECT * FROM user  WHERE user_name ='$name'";
+		$result_verify_name = mysqli_query ( $dbc, $query_verify_name );
+		
 		$query_verify_email = "SELECT * FROM user  WHERE user_email ='$Email'";
 		$result_verify_email = mysqli_query ( $dbc, $query_verify_email );
-		if (! $result_verify_email) { // if the Query Failed ,similar to if($result_verify_email==false)
-			echo ' Database Error Occured ';
+		
+		$query_verify_phone = "SELECT * FROM user  WHERE user_cellphone ='$cell'";
+		$result_verify_phone = mysqli_query ( $dbc, $query_verify_phone );
+		if (! $result_verify_email || !$result_verify_phone) { // if the Query Failed ,similar to if($result_verify_email==false)
+			$template->assign(" Database Error Occured ", 'Query Failed ') ;
 		}
-		if (mysqli_num_rows ( $result_verify_email ) == 0) { // IF no previous user is using this email .
+		if (mysqli_num_rows($result_verify_email) == 0 && mysqli_num_rows($result_verify_phone) == 0 && mysqli_num_rows($result_verify_name) == 0) { // IF no previous user is using this email .
 		                                                     
 			// Create a unique activation code:
 			
@@ -124,12 +130,46 @@ function verifyandinsert() {
 			if (mysqli_affected_rows ( $dbc ) == 1) { // If the Insert Query was successfull.
 				$template->assign("SUCC_MESSAGE", "Thank you for registering! A confirmation email has been sent to " . $Email);
 				$template->parse("CONTENT", "success");
+				$template->FastPrint();
+				exit();
 			} else { // If it did not run OK.
 				$template->assign("You could not be registered due to a system error. We apologize for any inconvenience.", 'Query Failed ') ;
 				$template->parse("CONTENT", "main");
 			}
 		} else { // The email address is not available.
-			$template->assign("MESSAGE", 'That email address has already been registered.') ;
+			$error_message = "";
+			$error_message1 = "";
+			$error_message2 = "";
+			$error_message3 = "";
+			if(mysqli_num_rows($result_verify_email) > 0) {
+				$error_message1 = "email address";
+			}
+			if(mysqli_num_rows($result_verify_phone) > 0) {
+				$error_message2 = "phone number";
+			}
+			if(mysqli_num_rows($result_verify_name) > 0) {
+				$error_message3 = "user name";
+			}
+			
+			if(empty($error_message1)) {
+				$error_message = "";
+			} else {
+				$error_message = $error_message1;
+			}
+			
+			if(!empty($error_message2) && !empty($error_message)) {
+				$error_message = $error_message2." and ".$error_message;
+			} else {
+				$error_message = $error_message2.$error_message;
+			}
+			
+			if(!empty($error_message3) && !empty($error_message)) {
+				$error_message = $error_message3." and ".$error_message;
+			} else {
+				$error_message = $error_message3.$error_message;
+			}
+			
+			$template->assign("MESSAGE", $error_message.' has already been registered.') ;
 			$template->parse("CONTENT", "main");
 		}
 	} else { // If the "error" array contains error msg , display them

@@ -38,18 +38,15 @@
     	}
     	
     	function showimg(input) {
-    		clearErrorLog();
     		var file = input.files[0];
+    		var reader = new FileReader();
     		var maxsize = 2*1024*1024; // 2m
     		if(!file || file.size > maxsize) {
-    			showErrorLogs("File Should Exist and The size should less than 2M");
     			return;
     		}
     		if(!/\.(jpg|png|gif|jpeg)$/gi.test(file.name)) {
-    			showErrorLogs("The profileImage should be  a Image");
     			return;
     		}
-    		var reader = new FileReader();
     		reader.onloadend = function () {
     			var img = document.getElementById("preview");
     			img.src = reader.result;
@@ -67,8 +64,21 @@
     		var em = document.forms["myForm"]["e-mail"].value;
     		var cell = document.forms["myForm"]["cell"].value;
     		var gender = document.forms["myForm"]["gender"].value;
-      		var age = document.forms["myForm"]["age"].value;
-    		var error = true;
+      		var age = document.forms["myForm"]["byear"].value;
+      		var file = document.forms["myForm"]["profileIcon"].files[0];
+      		
+      		var maxsize = 2*1024*1024; // 2m
+      		var error = true;
+      		
+    		if(file && file.size > maxsize) {
+    			showErrorLogs("File Should Exist and The size should less than 2M");
+    			error = false;
+    		}
+    		if(file && !/\.(jpg|png|gif|jpeg)$/gi.test(file.name)) {
+    			showErrorLogs("The profileImage should be  a Image");
+    			error = false;
+    		}
+      		
     		if(uname == "" || uname == null){
     			showErrorLogs("User name can not be empty");
     			error = false;
@@ -93,7 +103,7 @@
     			showErrorLogs("Gender should be selected");
     			error = false;
     		}
-    		if(age == "" || age == null || !/^\d{1,2}$/gi.test(age.trim())){
+    		if(age == "" || age == null || !/^\d{4}$/gi.test(age.trim())){
     			showErrorLogs("Age can't be empty and must be number");
     			error = false;
     		}
