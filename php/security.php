@@ -22,6 +22,9 @@ if(isset($_GET["token"]) && !empty($_GET["token"])) {
 	$TOKEN = pc($_GET["token"]);
 }
 
+$LOGIN_DEVICE = pc($_SERVER['HTTP_USER_AGENT']);
+$LOGIN_IP = pc($_SERVER['REMOTE_ADDR']);
+
 if(empty($ID) || empty($TOKEN)) {
 	if(isset($_POST["m"]) || isset($_GET["m"])) {
 		redirect("ajax");
@@ -30,16 +33,13 @@ if(empty($ID) || empty($TOKEN)) {
 	}
 }
 
-if(!isValidLogin($ID, $TOKEN)) {
+if(!isValidLogin($ID, $TOKEN, $LOGIN_IP)) {
 	if(isset($_POST["m"]) || isset($_GET["m"])) {
 		redirect("ajax");
 	} else {
 		redirect();
 	}
 }
-
-$LOGIN_DEVICE = pc($_SERVER['HTTP_USER_AGENT']);
-$LOGIN_IP = pc($_SERVER['REMOTE_ADDR']);
 
 function redirect($method) {
 	global $ID;

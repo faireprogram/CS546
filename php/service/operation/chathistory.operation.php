@@ -32,12 +32,12 @@
 		$logs = preg_split("/\r?\n/", $rawlog);
 		$varstart = 0;
 		foreach ($logs as $value) {
-			if($varstart < $start) {
-				$varstart++;
-				continue;
-			}
 			$message = json_decode($value, true);
 			if($message["time"] > $timestamp) {
+				continue;
+			}
+			
+			if($varstart < $start) {
 				$varstart++;
 				continue;
 			}

@@ -2,10 +2,10 @@
 
 // -------------------   Data Base Confiugre ----------------------
 
-DEFINE('DATABASE_USER', 'ZDing');
-DEFINE('DATABASE_PASSWORD', '19930920Ding');
+DEFINE('DATABASE_USER', 'www');
+DEFINE('DATABASE_PASSWORD', 'zw198787');
 DEFINE('DATABASE_HOST', 'localhost');
-DEFINE('DATABASE_NAME', 'mydb');
+DEFINE('DATABASE_NAME', 'cs546');
 
 
 // -----------------------------------------------------------------
