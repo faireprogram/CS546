@@ -21,7 +21,7 @@ $template->parse("CONTENT", "main");
 if (isset ( $_POST ['formsubmitted'] )) {
 	verifyandinsert();
 }
-for($i=date("Y")-100; $i<=date("Y"); $i++){
+for($i=date("Y"); $i>=date("Y")-100; $i--){
 	if(isset($_POST["byear"]) && $_POST["byear"] == $i){
 		$template->assign("BYEAR_SELECTED", "SELECTED");
 	}

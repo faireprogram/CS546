@@ -25,7 +25,9 @@ function verifyLogin() {
 			$template->parse("CONTENT", "main");
 		}
 		
-		$isFind = false;
+		$isFind_un = false;
+		$isFind_em = false;
+		$isPwdcorrect = false;
 		if($correct){
 			$uname = pc(trim($_POST["uname"]));
 			$pwd = pc($_POST["pwd"]);
@@ -42,7 +44,9 @@ function verifyLogin() {
 			else{
 				$row = mysqli_fetch_assoc($res);
 				if(!empty($row)){
+					$isFind_un = true;
 					if(password_verify($pwd, $row["user_pwd"])){
+						$isPwdcorrect = true;
 						$ID = $row["user_id"];
 						logLogin($ID, $TOKEN, $LOGIN_IP, $LOGIN_DEVICE);
 							
@@ -54,11 +58,11 @@ function verifyLogin() {
 						header("Location: /cs546?".$param);
 					}
 					else{
-						$template->assign("ERROR_MESSAGE", "Password is not correct!");
+						$isPwdcorrect = false;
 					}
 				}
 				else {
-					$isFind = false;
+					$isFind_un = false;
 				}
 			}
 			/*
@@ -72,8 +76,9 @@ function verifyLogin() {
 			else{
 				$row = mysqli_fetch_assoc($res);
 				if(!empty($row)){
+					$isFind_em = true;
 					if(password_verify($pwd, $row["user_pwd"])){
-							
+						$isPwdcorrect = true;
 						$ID = $row["user_id"];
 						logLogin($ID, $TOKEN, $LOGIN_IP, $LOGIN_DEVICE);
 							
@@ -86,15 +91,19 @@ function verifyLogin() {
 							
 					}
 					else{
-						$template->assign("ERROR_MESSAGE", "Password is not correct!");
+						$isPwdcorrect = false;
 					}
 				}
 				else {
-					$isFind = false;
+					$isFind_em = false;
 				}
 			}
-			if(!$isFind) {
-				$template->assign("ERROR_MESSAGE", "user name doesn't exist!");
+			if(!$isFind_un && ! $isFind_em){
+				$template->assign("ERROR_MESSAGE", "user name or user's email doesn't exist!");
+				$template->parse("CONTENT", "main");
+			}
+			elseif(!$isPwdcorrect) {
+				$template->assign("ERROR_MESSAGE", "password is not correct");
 				$template->parse("CONTENT", "main");
 			}
 		}
