@@ -105,36 +105,29 @@ function verifyandinsert() {
 
 	{
 		$query_verify_email = "SELECT * FROM user  WHERE user_email ='$Email'";
-		$query_verify_cell = "SElECT * FROM user WHERE user_cellphone = '$cell'";
 		$result_verify_email = mysqli_query ( $dbc, $query_verify_email );
-		$result_verify_cellphone = mysqli_query( $dbc, $query_verify_cell);
 		if (! $result_verify_email) { // if the Query Failed ,similar to if($result_verify_email==false)
 			echo ' Database Error Occured ';
 		}
 		if (mysqli_num_rows ( $result_verify_email ) == 0) { // IF no previous user is using this email .
-			if(mysqli_num_rows ($result_verify_cellphone) == 0){
-				// Create a unique activation code:
-					
-				$query_insert_user = "INSERT INTO user ( `user_name`, `user_email`, `user_cellphone`, `user_pwd` , `user_address`, `user_byear`, `user_gender`, `image`)".
-						"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
-					
-				$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, password_hash($Password, PASSWORD_DEFAULT), $addr, $byear, $gender, pc($profileImg)) );
-				if (! $result_insert_user) {
-					$template->assign("MESSAGE", 'Query Failed ') ;
-					$template->parse("CONTENT", "main");
-				}
-				if (mysqli_affected_rows ( $dbc ) == 1) { // If the Insert Query was successfull.
-					$template->assign("SUCC_MESSAGE", "Thank you for registering! A confirmation email has been sent to " . $Email);
-					$template->parse("CONTENT", "success");
-				} else { // If it did not run OK.
-					$template->assign("You could not be registered due to a system error. We apologize for any inconvenience.", 'Query Failed ') ;
-					$template->parse("CONTENT", "main");
-				}
-			}
-			else{
-				$template->assign("MESSAGE", 'That cellphone has already been registered.');
+		                                                     
+			// Create a unique activation code:
+			
+			$query_insert_user = "INSERT INTO user ( `user_name`, `user_email`, `user_cellphone`, `user_pwd` , `user_address`, `user_byear`, `user_gender`, `image`)".
+			"VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+			
+			$result_insert_user = mysqli_query ( $dbc, sprintf($query_insert_user, $name, $Email, $cell, password_hash($Password, PASSWORD_DEFAULT), $addr, $byear, $gender, pc($profileImg)) );
+			if (! $result_insert_user) {
+				$template->assign("MESSAGE", 'Query Failed ') ;
 				$template->parse("CONTENT", "main");
-			}                                                
+			}
+			if (mysqli_affected_rows ( $dbc ) == 1) { // If the Insert Query was successfull.
+				$template->assign("SUCC_MESSAGE", "Thank you for registering! A confirmation email has been sent to " . $Email);
+				$template->parse("CONTENT", "success");
+			} else { // If it did not run OK.
+				$template->assign("You could not be registered due to a system error. We apologize for any inconvenience.", 'Query Failed ') ;
+				$template->parse("CONTENT", "main");
+			}
 		} else { // The email address is not available.
 			$template->assign("MESSAGE", 'That email address has already been registered.') ;
 			$template->parse("CONTENT", "main");

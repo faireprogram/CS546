@@ -17,7 +17,7 @@ $template->assign("USER_NAME", "");
 $template->assign("EMAIL", "");
 $template->assign("CELLPHONE", "");
 $template->assign("ADDRESS", "");
-for($i=date("Y"); $i>=date("Y")-100; $i--){
+for($i=date("Y")-100; $i<=date("Y"); $i++){
 	if(isset($_POST["byear"]) && $_POST["byear"] == $i){
 		$template->assign("BYEAR_SELECTED", "SELECTED");
 	}

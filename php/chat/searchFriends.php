@@ -44,7 +44,7 @@ for($i=date("Y")-100; $i<=date("Y"); $i++){
 	$template->parse("SY", ".option_sy");
 	$template->assign("SY_SELECTED", "");
 }
-for($i=date("Y"); $i>=date("Y")-100; $i--){
+for($i=date("Y")-100; $i<=date("Y"); $i++){
 	if(isset($_POST["ey"]) && $_POST["ey"] == $i) {
 		$template->assign("EY_SELECTED", "selected");
 	}
