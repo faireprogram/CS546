@@ -129,6 +129,8 @@ function search() {
 			} else {
 				if (isset ( $res )) {
 					while ( $row = mysqli_fetch_assoc ( $res ) ) {
+						$template->assign("DISABLED", "");
+						$template->assign("ADD_STATUS", "Add");
 						if($row["user_id"] == $ID) continue;
 						elseif (contains($row["user_id"], $ID)) {
 							$template->assign("DISABLED", "disabled");
