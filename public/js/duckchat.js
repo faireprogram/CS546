@@ -906,6 +906,7 @@
 		/*
 		 * win has been open before
 		 */
+		var finalwin = null;
 		if(win) {
 			var chatcontainer = $("#" + compositeId);
 			if(senderId == this.data.attributes["id"]) {
@@ -919,6 +920,7 @@
 			} else {
 				this.nicelyShowWindow(win);
 			}
+			finalwin = win;
 		} else {
 			var newwin = invoke(this, _createNewWindowByAttributes, owner["id"], owner["name"]);
 			newwin.hide();
@@ -933,6 +935,10 @@
 			} else {
 				this.nicelyShowWindow(newwin);
 			}
+			finalwin = newwin;
+		}
+		if(parseInt(finalwin.data("timestamp")) > parseInt(cmd["time"])) {
+			finalwin.data("historyoffset", parseInt(finalwin.data("historyoffset")) + 1);
 		}
 		scrollMessageWindow($("#" + compositeId));
 	}
